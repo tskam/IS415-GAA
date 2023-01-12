@@ -16,7 +16,7 @@ website:
 
 format:
   html:
-    theme: united
+    theme: Flatly
     css: styles.css
     toc: true
 
