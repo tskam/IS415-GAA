@@ -7,13 +7,6 @@
     "text": "About this site\n\n1 + 1\n\n[1] 2"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "IS415-GAA",
-    "section": "",
-    "text": "Welcome to IS415 Geospatial Analyticvs and Applications.\nThis is the course website of IS415 I study this term. You will find my course work on this website."
-  },
-  {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
     "title": "Hands-on Exercise 1: Geospatial Data Wrangling with R",
@@ -54,5 +47,12 @@
     "title": "In-class Exercise 2: Geospatial Data Wrangling",
     "section": "The Task",
     "text": "The Task\nThe specific tasks of this take-home exercise are as follows:\n\nUsing appropriate sf method, import the shapefile into R and save it in a simple feature data frame format. Note that there are three Projected Coordinate Systems of Nigeria, they are: EPSG: 26391, 26392, and 26303. You can use any one of them.\nUsing appropriate tidyr and dplyr methods, derive the proportion of functional and non-functional water point at LGA level.\nCombining the geospatial and aspatial data frame into simple feature data frame.\nVisualising the distribution of water point by using appropriate analytical visualisation methods."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "IS415-GAA",
+    "section": "",
+    "text": "Welcome to IS415 Geospatial Analyticvs and Applications.\nThis is the course website of IS415 I study this term. You will find my course work on this website."
   }
 ]
