@@ -18,7 +18,7 @@ To address the issue of providing clean and sustainable water supply to the rura
 
 ## Objectives
 
-Geospatial analytics hold tremendous potential to address complex problems facing society. In this study, you are tasked to apply appropriate geospatial data wrangling methods to prepare the data for water point mapping study. For the purpose of this study, Nigeria will be used as the study country. 
+Geospatial analytics hold tremendous potential to address complex problems facing society. In this study, you are tasked to apply appropriate geospatial data wrangling methods to prepare the data for water point mapping study. For the purpose of this study, Nigeria will be used as the study country.
 
 ## The Data
 
@@ -38,3 +38,110 @@ The specific tasks of this take-home exercise are as follows:
 -   Using appropriate tidyr and dplyr methods, derive the proportion of functional and non-functional water point at LGA level.
 -   Combining the geospatial and aspatial data frame into simple feature data frame.
 -   Visualising the distribution of water point by using appropriate analytical visualisation methods.
+
+## Getting started
+
+For the purpose of this in-class exercise, three R packages will be used. They are: sf, tidyverse and funModeling.
+
+::: callout-note
+## Your turn
+
+Using the step you had learned, check if these three R packages have been installed in you laptop, if not install the missing R packages. If Yes, launch the R packages into R environment
+:::
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+pacman::p_load(sf, tidyverse, funModeling)
+```
+
+## Importing Geospatial
+
+::: callout-note
+## Your turn
+
+Using the step you had learned, import the LGA boundary GIS data of Nigeria downloaded from both sources recommend above.
+:::
+
+### The geoBoundaries data set
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+geoNGA <- st_read("data/geospatial/",
+                  layer = "geoBoundaries-NGA-ADM2") %>%
+  st_transform(crs = 26392)
+```
+
+### The NGA data set
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+NGA <- st_read("data/geospatial/",
+               layer = "nga_admbnda_adm2") %>%
+  st_transform(crs = 26392)
+```
+
+## Importing Aspatial data
+
+::: callout-note
+### Your turn
+
+Using the steps you had learned, import the downloaded water point data set into R.
+:::
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+#| eval: false
+wp_nga <- read_csv("data/aspatial/WPdx.csv") %>%
+  filter(`#clean_country_name` == "Nigeria")
+```
+
+### Write the extracted data into rds format
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+```
+
+## Converting Aspatial Data into Geospatial
+
+::: callout-note
+### Your turn
+
+Using the steps you had learned, convert the newly extracted wp_NGA into point sf data frame
+:::
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+#| eval: false
+wp_nga$Geometry = st_as_sfc(wp_nga$`New Georeferenced Column`)
+wp_nga
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+#| eval: false
+wp_sf <- st_sf(wp_nga, crs=4326)
+wp_sf
+```
+
+### Projection transformation
+
+::: callout-note
+### Your turn
+
+Using the steps you had learned, transform the projection from wgs84 to appropriate projected coordinate system of Nigeria.
+:::
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+#| eval: false
+wp_sf <- wp_sf %>%
+  st_transform(crs = 26392)
+```

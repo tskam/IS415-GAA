@@ -54,5 +54,33 @@
     "title": "IS415-GAA",
     "section": "",
     "text": "Welcome to IS415 Geospatial Analyticvs and Applications.\nThis is the course website of IS415 I study this term. You will find my course work on this website."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#getting-started",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#getting-started",
+    "title": "In-class Exercise 2: Geospatial Data Wrangling",
+    "section": "Getting started",
+    "text": "Getting started\nFor the purpose of this in-class exercise, three R packages will be used. They are: sf, tidyverse and funModeling.\n\n\n\n\n\n\nYour turn\n\n\n\nUsing the step you had learned, check if these three R packages have been installed in you laptop, if not install the missing R packages. If Yes, launch the R packages into R environment\n\n\n\n\nShow the code\npacman::p_load(sf, tidyverse, funModeling)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-geospatial",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-geospatial",
+    "title": "In-class Exercise 2: Geospatial Data Wrangling",
+    "section": "Importing Geospatial",
+    "text": "Importing Geospatial\n\n\n\n\n\n\nYour turn\n\n\n\nUsing the step you had learned, import the LGA boundary GIS data of Nigeria downloaded from both sources recommend above.\n\n\n\nThe geoBoundaries data set\n\n\nShow the code\ngeoNGA <- st_read(\"data/geospatial/\",\n                  layer = \"geoBoundaries-NGA-ADM2\") %>%\n  st_transform(crs = 26392)\n\n\nReading layer `geoBoundaries-NGA-ADM2' from data source \n  `D:\\tskam\\IS415-GAA\\In-class_Ex\\In-class_Ex02\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 774 features and 5 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442\nGeodetic CRS:  WGS 84\n\n\n\n\nThe NGA data set\n\n\nShow the code\nNGA <- st_read(\"data/geospatial/\",\n               layer = \"nga_admbnda_adm2\") %>%\n  st_transform(crs = 26392)\n\n\nReading layer `nga_admbnda_adm2' from data source \n  `D:\\tskam\\IS415-GAA\\In-class_Ex\\In-class_Ex02\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 774 features and 16 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442\nGeodetic CRS:  WGS 84"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-aspatial-data",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-aspatial-data",
+    "title": "In-class Exercise 2: Geospatial Data Wrangling",
+    "section": "Importing Aspatial data",
+    "text": "Importing Aspatial data\n\n\n\n\n\n\nYour turn\n\n\n\nUsing the steps you had learned, import the downloaded water point data set into R.\n\n\n\n\nShow the code\nwp_nga <- read_csv(\"data/aspatial/WPdx.csv\") %>%\n  filter(`#clean_country_name` == \"Nigeria\")\n\n\n\nWrite the extracted data into rds format"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#converting-aspatial-data-into-geospatial",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#converting-aspatial-data-into-geospatial",
+    "title": "In-class Exercise 2: Geospatial Data Wrangling",
+    "section": "Converting Aspatial Data into Geospatial",
+    "text": "Converting Aspatial Data into Geospatial\n\n\n\n\n\n\nYour turn\n\n\n\nUsing the steps you had learned, convert the newly extracted wp_NGA into point sf data frame\n\n\n\n\nShow the code\nwp_nga$Geometry = st_as_sfc(wp_nga$`New Georeferenced Column`)\nwp_nga\n\n\n\n\nShow the code\nwp_sf <- st_sf(wp_nga, crs=4326)\nwp_sf\n\n\n\nProjection transformation\n\n\n\n\n\n\nYour turn\n\n\n\nUsing the steps you had learned, transform the projection from wgs84 to appropriate projected coordinate system of Nigeria.\n\n\n\n\nShow the code\nwp_sf <- wp_sf %>%\n  st_transform(crs = 26392)"
   }
 ]
