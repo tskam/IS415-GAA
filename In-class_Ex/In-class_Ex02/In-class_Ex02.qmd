@@ -1,14 +1,19 @@
 ---
 title: "In-class Exercise 2: Geospatial Data Wrangling"
-date: "`r Sys.Date()`"  
+date: "16 January 2023" 
+date-modified: "`r Sys.Date()`"
+number-sections: true
 format: html
-execute: 
-  message: false
+execute:
+  echo: true
+  eval: true
   warning: false
 editor: visual
 ---
 
-## Setting the Scene
+## Overview
+
+### Setting the Scene
 
 Water is an important resource to mankind. Clean and accessible water is critical to human health. It provides a healthy environment, a sustainable economy, reduces poverty and ensures peace and security. Yet over 40% of the global population does not have access to sufficient clean water. By 2025, 1.8 billion people will be living in countries or regions with absolute water scarcity, according to UN-Water. The lack of water poses a major threat to several sectors, including food security. Agriculture uses about 70% of the world's accessible freshwater.
 
@@ -16,28 +21,28 @@ Developing countries are most affected by water shortages and poor water quality
 
 To address the issue of providing clean and sustainable water supply to the rural community, a global [Water Point Data Exchange (WPdx)](https://www.waterpointdata.org/about/) project has been initiated. The main aim of this initiative is to collect water point related data from rural areas at the water point or small water scheme level and share the data via WPdx Data Repository, a cloud-based data library. What is so special of this project is that data are collected based on [WPDx Data Standard](https://www.waterpointdata.org/wp-content/uploads/2021/04/WPDx_Data_Standard.pdf).
 
-## Objectives
+### Objectives
 
 Geospatial analytics hold tremendous potential to address complex problems facing society. In this study, you are tasked to apply appropriate geospatial data wrangling methods to prepare the data for water point mapping study. For the purpose of this study, Nigeria will be used as the study country.
 
-## The Data
+### The Data
 
-### Apstial data
+#### Apstial data
 
 For the purpose of this assignment, data from [WPdx Global Data Repositories](https://www.waterpointdata.org/access-data/) will be used. There are two versions of the data. They are: WPdx-Basic and WPdx+. You are required to use WPdx+ data set.
 
-### Geospatial data
+#### Geospatial data
 
 Nigeria Level-2 Administrative Boundary (also known as Local Government Area) polygon features GIS data will be used in this take-home exercise. The data can be downloaded either from The [Humanitarian Data Exchange](https://data.humdata.org/) portal or [geoBoundaries](https://www.geoboundaries.org/index.html).
 
-## The Task
+### The Task
 
 The specific tasks of this take-home exercise are as follows:
 
 -   Using appropriate sf method, import the shapefile into R and save it in a simple feature data frame format. Note that there are three Projected Coordinate Systems of Nigeria, they are: EPSG: 26391, 26392, and 26303. You can use any one of them.
--   Using appropriate tidyr and dplyr methods, derive the proportion of functional and non-functional water point at LGA level.
+-   Using appropriate tidyr and dplyr methods, derive the number of functional and non-functional water points at LGA level.
 -   Combining the geospatial and aspatial data frame into simple feature data frame.
--   Visualising the distribution of water point by using appropriate analytical visualisation methods.
+-   Visualising the distribution of water point by using appropriate statistical methods.
 
 ## Getting started
 
@@ -49,13 +54,17 @@ For the purpose of this in-class exercise, three R packages will be used. They a
 Using the step you had learned, check if these three R packages have been installed in you laptop, if not install the missing R packages. If Yes, launch the R packages into R environment
 :::
 
+::: {style="font-size: 1.2em"}
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 pacman::p_load(sf, tidyverse, funModeling)
 ```
+:::
 
-## Importing Geospatial
+## Handling Geospatial Data
+
+### Importing Geospatial
 
 ::: callout-note
 ## Your turn
@@ -63,8 +72,9 @@ pacman::p_load(sf, tidyverse, funModeling)
 Using the step you had learned, import the LGA boundary GIS data of Nigeria downloaded from both sources recommend above.
 :::
 
-### The geoBoundaries data set
+#### The geoBoundaries data set
 
+::: {style="font-size: 1.2em"}
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -72,9 +82,11 @@ geoNGA <- st_read("data/geospatial/",
                   layer = "geoBoundaries-NGA-ADM2") %>%
   st_transform(crs = 26392)
 ```
+:::
 
-### The NGA data set
+#### The NGA data set
 
+::: {style="font-size: 1.2em"}
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -82,55 +94,66 @@ NGA <- st_read("data/geospatial/",
                layer = "nga_admbnda_adm2") %>%
   st_transform(crs = 26392)
 ```
-
-## Importing Aspatial data
-
-::: callout-note
-### Your turn
-
-Using the steps you had learned, import the downloaded water point data set into R.
 :::
 
+By examining both sf dataframe closely, we notice that NGA provide both LGA and state information. Hence, NGA data.frame will be used for the subsequent processing.
+
+### Importing Aspatial data
+
+::: callout-note
+#### Your turn
+
+Using the steps you had learned, import the downloaded water point data set into R, at the same time select only water points within Nigeria.
+:::
+
+::: {style="font-size: 1.2em"}
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-#| eval: false
 wp_nga <- read_csv("data/aspatial/WPdx.csv") %>%
   filter(`#clean_country_name` == "Nigeria")
 ```
+:::
 
-### Write the extracted data into rds format
+#### Converting water point data into sf point features
 
-```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
-```
+Converting an aspatial data into an sf data.frame involves two steps.
 
-## Converting Aspatial Data into Geospatial
+First, we need to convert the [wkt](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) field into sfc field by using `st_as_sfc()` data type.
 
 ::: callout-note
 ### Your turn
 
-Using the steps you had learned, convert the newly extracted wp_NGA into point sf data frame
+Using the steps you had learned, convert the newly extracted wp_NGA into an sf data.frame
 :::
 
+::: {style="font-size: 1.2em"}
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-#| eval: false
 wp_nga$Geometry = st_as_sfc(wp_nga$`New Georeferenced Column`)
 wp_nga
 ```
+:::
 
+Next, we will convert the tibble data.frame into an sf object by using `st_sf()`. It is also important for us to include the referencing system of the data into the sf object.
+
+::: callout-note
+### Your turn
+
+Using the steps you had learned, convert the newly extracted wp_NGA into an sf data.frame
+:::
+
+::: {style="font-size: 1.2em"}
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-#| eval: false
 wp_sf <- st_sf(wp_nga, crs=4326)
 wp_sf
 ```
+:::
 
-### Projection transformation
+#### Transforming into Nigeria projected coordinate system
 
 ::: callout-note
 ### Your turn
@@ -138,10 +161,199 @@ wp_sf
 Using the steps you had learned, transform the projection from wgs84 to appropriate projected coordinate system of Nigeria.
 :::
 
+::: {style="font-size: 1.2em"}
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-#| eval: false
 wp_sf <- wp_sf %>%
   st_transform(crs = 26392)
 ```
+:::
+
+## Geospatial Data Cleaning
+
+Data cleaning is an important step in any data science task including geospatial data science. It is important for us to do our due deligent to check if any data quality issues occured in the data used.
+
+### Excluding redundent fields
+
+NGA sf data.frame consists of many redundent fields. The code chunk below uses `select()` of dplyr to retain column 3, 4, 8 and 9. Do you know why?
+
+::: {style="font-size: 1.2em"}
+```{r}
+NGA <- NGA %>%
+  select(c(3:4, 8:9))
+```
+:::
+
+### Checking for duplicate name
+
+It is always important to check for duplicate name in the data main data fields. Using `duplicated()` of Base R, we can flag out LGA names that might be duplicated as shown in the code chunk below.
+
+::: {style="font-size: 1.2em"}
+```{r}
+NGA$ADM2_EN[duplicated(NGA$ADM2_EN)==TRUE]
+```
+:::
+
+The printout above shows that there are 6 LGAs with the same name. A Google search using the coordinates showed that there are LGAs with the same name but are located in different states. For instances, there is a Bassa LGA in Kogi State and a Bassa LGA in Plateau State.
+
+Let us correct these errors by using the code chunk below.
+
+::: {style="font-size: 1.2em"}
+```{r}
+NGA$ADM2_EN[94] <- "Bassa, Kogi"
+NGA$ADM2_EN[95] <- "Bassa, Plateau"
+NGA$ADM2_EN[304] <- "Ifelodun, Kwara"
+NGA$ADM2_EN[305] <- "Ifelodun, Osun"
+NGA$ADM2_EN[355] <- "Irepodun, Kwara"
+NGA$ADM2_EN[356] <- "Irepodun, Osun"
+NGA$ADM2_EN[519] <- "Nasarawa, Kano"
+NGA$ADM2_EN[520] <- "Nasarawa, Nasarawa"
+NGA$ADM2_EN[546] <- "Obi, Benue"
+NGA$ADM2_EN[547] <- "Obi, Nasarawa"
+NGA$ADM2_EN[693] <- "Surulere, Lagos"
+NGA$ADM2_EN[694] <- "Surulere, Oyo"
+```
+:::
+
+Now, let us rerun the code chunk below to confirm that the duplicated name issue has been addressed.
+
+::: {style="font-size: 1.2em"}
+```{r}
+NGA$ADM2_EN[duplicated(NGA$ADM2_EN)==TRUE]
+```
+:::
+
+## Data Wrangling for Water Point Data
+
+Exploratory Data Analysis (EDA) is a popular approach to gain initial understanding of the data. In the code chunk below, `freq()` of funModeling package is used to reveal the distribution of water point status visually.
+
+::: {style="font-size: 1.2em"}
+```{r}
+freq(data = wp_sf,
+     input = '#status_clean')
+```
+:::
+
+Figure above shows that there are nine classes in the `#status_clean` fields.
+
+Next, code chunk below will be used to perform the following data wrangling tasksP - `rename()` of dplyr package is used to rename the column from *#status_clean* to *status_clean* for easier handling in subsequent steps. - `select()` of dplyr is used to include `status_clean` in the output sf data.frame. - `mutate()` and `replace_na()` are used to recode all the NA values in `status_clean` into unknown.
+
+::: {style="font-size: 1.2em"}
+```{r}
+wp_sf_nga <- wp_sf %>% 
+  rename(status_clean = '#status_clean') %>%
+  select(status_clean) %>%
+  mutate(status_clean = replace_na(
+    status_clean, "unknown"))
+```
+:::
+
+### Extracting Water Point Data
+
+Now we are ready to extract the water point data according to their status.
+
+The code chunk below is used to extract functional water point.
+
+::: {style="font-size: 1.2em"}
+```{r}
+wp_functional <- wp_sf_nga %>%
+  filter(status_clean %in%
+           c("Functional",
+             "Functional but not in use",
+             "Functional but needs repair"))
+```
+:::
+
+The code chunk below is used to extract nonfunctional water point.
+
+::: {style="font-size: 1.2em"}
+```{r}
+wp_nonfunctional <- wp_sf_nga %>%
+  filter(status_clean %in%
+           c("Abandoned/Decommissioned",
+             "Abandoned",
+             "Non-Functional due to dry season",
+             "Non-Functional",
+             "Non functional due to dry season"))
+```
+:::
+
+The code chunk below is used to extract water point with unknown status.
+
+::: {style="font-size: 1.2em"}
+```{r}
+wp_unknown <- wp_sf_nga %>%
+  filter(status_clean == "unknown")
+```
+:::
+
+Next, the code chunk below is used to perform a quick EDA on the derived sf data.frames.
+
+::: {style="font-size: 1.2em"}
+```{r}
+freq(data = wp_functional,
+     input = 'status_clean')
+
+freq(data = wp_nonfunctional,
+     input = 'status_clean')
+
+freq(data = wp_unknown,
+     input = 'status_clean')
+```
+:::
+
+### Performing Point-in-Polygon Count
+
+Next, we want to find out the number of total, functional, nonfunctional and unknown water points in each LGA. This is performed in the following code chunk. First, it identifies the functional water points in each LGA by using `st_intersects()` of sf package. Next, `length()` is used to calculate the number of functional water points that fall inside each LGA.
+
+::: {style="font-size: 1.2em"}
+```{r}
+NGA_wp <- NGA %>% 
+  mutate(`total_wp` = lengths(
+    st_intersects(NGA, wp_sf_nga))) %>%
+  mutate(`wp_functional` = lengths(
+    st_intersects(NGA, wp_functional))) %>%
+  mutate(`wp_nonfunctional` = lengths(
+    st_intersects(NGA, wp_nonfunctional))) %>%
+  mutate(`wp_unknown` = lengths(
+    st_intersects(NGA, wp_unknown)))
+```
+:::
+
+Notice that four new derived fields have been added into *NGA_wp* sf data.frame.
+
+### Visualing attributes by using statistical graphs
+
+In this code chunk below, appropriate functions of [**ggplot2**](https://ggplot2.tidyverse.org/) package is used to reveal the distribution of total water points by LGA in histogram.
+
+::: {style="font-size: 1.2em"}
+```{r}
+ggplot(data = NGA_wp,
+       aes(x = total_wp)) + 
+  geom_histogram(bins=20,
+                 color="black",
+                 fill="light blue") +
+  geom_vline(aes(xintercept=mean(
+    total_wp, na.rm=T)),
+             color="red", 
+             linetype="dashed", 
+             size=0.8) +
+  ggtitle("Distribution of total water points by LGA") +
+  xlab("No. of water points") +
+  ylab("No. of\nLGAs") +
+  theme(axis.title.y=element_text(angle = 0))
+```
+:::
+
+### Saving the analytical data in rds format
+
+In order to retain the sf object structure for subsequent analysis, it is recommended to save the sf data.frame into rds format.
+
+In the code chunk below, [`write_rds()`](https://readr.tidyverse.org/reference/read_rds.html) of [**readr**](https://readr.tidyverse.org/index.html) package is used to export an sf data.frame into rds format.
+
+::: {style="font-size: 1.2em"}
+```{r}
+write_rds(NGA_wp, "data/rds/NGA_wp.rds")
+```
+:::
