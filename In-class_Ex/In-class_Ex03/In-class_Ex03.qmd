@@ -368,3 +368,26 @@ NGA_wp <- NGA_wp %>%
   mutate(wp_functional = na_if(
     total_wp, total_wp < 0))
 ```
+
+```{r}
+NGA_state <- NGA_wp %>%
+  group_by(ADM1_EN) %>%
+  summarise(total_wp = sum(total_wp),
+            wp_functional = sum(wp_functional),
+            wp_nonfunctional = sum(wp_nonfunctional)) %>%
+  ungroup() %>%
+  mutate(pct_functional = wp_functional/total_wp) %>%
+  mutate(pct_nonfunctional = wp_nonfunctional/total_wp)
+
+```
+
+
+```{r}
+ggplot(data = NGA_state,
+       aes(x = pct_nonfunctional,
+           y = reorder(ADM1_EN, pct_nonfunctional))) +
+  geom_col()
+```
+
+
+reorder(miRNA, -value)

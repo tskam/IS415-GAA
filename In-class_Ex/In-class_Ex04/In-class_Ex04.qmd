@@ -1,0 +1,53 @@
+---
+title: "In-class Exercise 4"
+author: "Dr. Kam Tin Seong"
+date: "30 January 2023"
+date-modified: "`r Sys.Date()`"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual  
+---
+
+Getting started
+
+```{r}
+pacman::p_load(maptools, sf, raster, spatstat, tmap)
+```
+
+Things to learn from this code chunk.
+
+Importing Data
+
+```{r}
+childcare_sf <- st_read("data/child-care-services-geojson.geojson") %>%
+  st_transform(crs = 3414)
+```
+
+```{r}
+sg_sf <- st_read(dsn = "data", 
+                 layer="CostalOutline")
+```
+
+```{r}
+mpsz_sf <- st_read(dsn = "data", 
+                layer = "MP14_SUBZONE_WEB_PL")
+
+```
+
+```{r}
+childcare <- as_Spatial(childcare_sf)
+mpsz <- as_Spatial(mpsz_sf)
+sg <- as_Spatial(sg_sf)
+```
+
+```{r}
+childcare_sp <- as(childcare, "SpatialPoints")
+sg_sp <- as(sg, "SpatialPolygons")
+```  
+
+```{r}
+childcare_ppp <- as(childcare_sp, "ppp")
+childcare_ppp
+```
