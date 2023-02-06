@@ -381,13 +381,11 @@ NGA_state <- NGA_wp %>%
 
 ```
 
-
 ```{r}
 ggplot(data = NGA_state,
        aes(x = pct_nonfunctional,
            y = reorder(ADM1_EN, pct_nonfunctional))) +
   geom_col()
 ```
-
 
 reorder(miRNA, -value)

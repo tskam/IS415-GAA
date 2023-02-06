@@ -1,0 +1,147 @@
+---
+title: "In-class Exercise 5"
+author: "Dr. Kam Tin Seong"
+date: "3 February 2023"
+date-modified: "`r Sys.Date()`"
+format: html
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual  
+---
+
+In this in-class exercise, you will learn how to perform Local Colocation Quotient Analysis by using convenience store data of Taiwan as a use case.
+
+## Getting Started
+
+For the purpose of this in-class exercise, four R packages will be used. They are:
+
+-   tidyverse for performing data science tasks,
+
+-   sf for importing, managing and processing geospatial data in simple feature data.frame,
+
+-   tmap for plotting cartographic quality maps, and
+
+-   sfdep for performing geospatia data wrangling and local colocation quotient analysis.
+
+```{r}
+pacman::p_load(tidyverse, tmap, sf, sfdep) 
+```
+
+## Importing Data
+
+Two geospatial data will be used in this hands-on exercise. Both of them are in ESRI shapefile format.
+
+### Study area data
+
+This is a polygon features data showing selected towns of Taipei city.  The original data set is in geographic coordinate system and st_transform is used to the data set into projected coordinates system
+
+```{r}
+studyArea <- st_read(dsn = "data", 
+                 layer="study_area") %>%
+  st_transform(crs = 3829)
+```
+
+### Stores data
+
+This is a point features data showing selected towns of Taipei city.  The original data set is in geographic coordinate system and st_transform is used to the data set into projected coordinates system
+
+```{r}
+stores <- st_read(dsn = "data",
+                  layer = "stores") %>%
+  st_transform(crs = 3829)
+```
+
+## Visualising the sf layers
+
+
+```{r}
+tmap_mode("view")
+tm_shape(studyArea) +
+  tm_polygons() +
+tm_shape(stores)+ 
+  tm_dots(col = "Name",
+             size = 0.01,
+             border.col = "black",
+             border.lwd = 0.5) +
+  tm_view(set.zoom.limits = c(12, 16))
+tmap_mode("plot")
+
+```
+
+## Local Colocation Quotients (LCLQ)
+
+### Preparing nearest neighbours list 
+
+In the code chunk below, [`st_knn()`](https://sfdep.josiahparry.com/reference/st_knn.html) of sfdep package is used to determine the k (i.e. 6) nearest neighbours for given point geometry.   
+
+```{r}
+nb <- include_self(
+  st_knn(st_geometry(stores), 6))
+```
+
+
+### Computing kernel weights 
+
+In the code chunk below, [`st_kernel_weights()`](https://sfdep.josiahparry.com/reference/st_kernel_weights.html) of sfdep package is used to derive a weights list by using a kernel function.
+
+```{r}
+wt <- st_kernel_weights(nb, 
+                        stores, 
+                        "gaussian", 
+                        adaptive = TRUE)
+```
+
+::: {.callout-note}
+- an object of class nb e.g. created by using either `st_contiguity()` or `st_knn()` is required.
+- The supported kernel methods are: "uniform", "gaussian", "triangular", "epanechnikov", or "quartic". 
+:::
+
+### Preparing the vector list
+
+To compute LCLQ by using sfdep package, the reference point data must be in either character or vector list.  The code chunks below are used to prepare two vector lists.  One of Family Mart and for 7-11 and are called A and B respectively.   
+
+```{r}
+FamilyMart <- stores %>%
+  filter(Name == "Family Mart")
+A <- FamilyMart$Name
+```
+
+```{r}
+SevenEleven <- stores %>%
+  filter(Name == "7-Eleven")
+B <- SevenEleven$Name
+```
+
+### Computing LCLQ
+
+In the code chunk below [`local_colocation()`](https://sfdep.josiahparry.com/reference/local_colocation.html) us used to compute the LCLQ values for each Family Mart point event.
+
+```{r}
+LCLQ <- local_colocation(A, B, nb, wt, 49)
+```
+
+### Joining output table
+
+Before we can plot the LCLQ values their p-values, we need to join the output of `local_colocation()` to the stores sf data.frame.  However, a quick check of LCLQ data-frame, we can't find any field can be used as the join field.  As a result, [`cbind()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/cbind) of Base R is useed. 
+
+```{r}
+LCLQ_stores <- cbind(stores, LCLQ)
+```
+
+### Plotting LCLQ values
+
+In the code chunk below, tmap functions are used to plot the LCLQ analysis. 
+
+```{r}
+tmap_mode("view")
+tm_shape(studyArea) +
+  tm_polygons() +
+tm_shape(LCLQ_stores)+ 
+  tm_dots(col = "X7.Eleven",
+             size = 0.01,
+             border.col = "black",
+             border.lwd = 0.5) +
+  tm_view(set.zoom.limits = c(12, 16))
+```
