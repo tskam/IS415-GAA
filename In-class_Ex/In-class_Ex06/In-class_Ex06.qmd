@@ -1,6 +1,8 @@
 ---
 title: "In-class Exercise 6: Spatial Weights - sfdep methods"
 author: "Dr. Kam Tin Seong"
+date: "10 February 2023"
+date-modified: "`r Sys.Date()`"
 format: 
   html:
     fontsize: 20px
