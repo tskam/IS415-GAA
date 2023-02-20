@@ -284,35 +284,35 @@
     "href": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html",
     "title": "In-class Exercise 7: Emerging Hot Spot Analysis: sfdep methods",
     "section": "",
-    "text": "This in-class introduces an alternative R package to spdep package you used in Hands-on Exercise 6. The package is called sfdep. According to Josiah Parry, the developer of the package, “sfdep builds on the great shoulders of spdep package for spatial dependence. sfdep creates an sf and tidyverse friendly interface to the package as well as introduces new functionality that is not present in spdep. sfdep utilizes list columns extensively to make this interface possible.”"
+    "text": "Emerging Hot Spot Analysis (EHSA) is a spatio-temporal analysis method for revealing and describing how hot spot and cold spot areas evolve over time. The analysis consist of four main steps:\n\nBuilding a space-time cube,\nCalculating Getis-Ord local Gi* statistic for each bin by using an FDR correction,\nEvaluating these hot and cold spot trends by using Mann-Kendall trend test,\nCategorising each study area location by referring to the resultant trend z-score and p-value for each location with data, and with the hot spot z-score and p-value for each bin."
   },
   {
     "objectID": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#installing-and-loading-the-r-packages",
     "href": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#installing-and-loading-the-r-packages",
     "title": "In-class Exercise 7: Emerging Hot Spot Analysis: sfdep methods",
     "section": "Installing and Loading the R Packages",
-    "text": "Installing and Loading the R Packages\nAs usual, p_load() of pacman package will be used to check if the necessary packages have been installed in R, if yes, load the packages on R environment.\nThree R packages are need for this in-class exercise, they are: sf, sfdep and tidyverse.\n\n\npacman::p_load(sf, sfdep, tmap, plotly, tidyverse)"
+    "text": "Installing and Loading the R Packages\nAs usual, p_load() of pacman package will be used to check if the necessary packages have been installed in R, if yes, load the packages on R environment.\nFive R packages are need for this in-class exercise, they are: sf, sfdep, tmap, and tidyverse.\n\n\npacman::p_load(sf, sfdep, tmap, plotly, tidyverse)"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#importing-geospatial-data",
     "href": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#importing-geospatial-data",
     "title": "In-class Exercise 7: Emerging Hot Spot Analysis: sfdep methods",
     "section": "Importing geospatial data",
-    "text": "Importing geospatial data\nIn the code chunk below, st_read() of sf package is used to import Hunan shapefile into R.\n\n\nhunan <- st_read(dsn = \"data/geospatial\", \n                 layer = \"Hunan\")\n\nReading layer `Hunan' from data source \n  `D:\\tskam\\IS415-GAA\\In-class_Ex\\In-class_Ex07\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 88 features and 7 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812\nGeodetic CRS:  WGS 84\n\n\n\nNow, we plot the study are by using tmap function as shown in the code chunk below.\n\n\ntmap_mode(\"view\")\n\ntmap mode set to interactive viewing\n\ntm_shape(hunan) +\n  tm_polygons(alpha = 0.05)"
+    "text": "Importing geospatial data\nIn the code chunk below, st_read() of sf package is used to import Hunan shapefile into R.\n\n\nhunan <- st_read(dsn = \"data/geospatial\", \n                 layer = \"Hunan\")\n\nReading layer `Hunan' from data source \n  `D:\\tskam\\IS415-GAA\\In-class_Ex\\In-class_Ex07\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 88 features and 7 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812\nGeodetic CRS:  WGS 84\n\n\n\n\n\n\n\n\n\nDo it Yourself\n\n\n\nUsing the steps you learned in previous lesson, examine the content hunan sf data.frame"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#importing-attribute-table",
     "href": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#importing-attribute-table",
     "title": "In-class Exercise 7: Emerging Hot Spot Analysis: sfdep methods",
     "section": "Importing attribute table",
-    "text": "Importing attribute table\nIn the code chunk below, read_csv() of readr is used to import Hunan_2012.csv into R.\n\n\nGDPPC <- read_csv(\"data/aspatial/Hunan_GDPPC.csv\")\n\nRows: 1496 Columns: 3\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (1): County\ndbl (2): Year, GDPPC\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+    "text": "Importing attribute table\nIn the code chunk below, read_csv() of readr is used to import Hunan_GDPPC.csv into R.\n\n\nGDPPC <- read_csv(\"data/aspatial/Hunan_GDPPC.csv\")\n\n\n\n\n\n\n\n\nDo it Yourself\n\n\n\nUsing the steps you learned in previous lesson, examine the content the GDPPC tibble data.frame."
   },
   {
     "objectID": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#computing-gi",
     "href": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#computing-gi",
     "title": "In-class Exercise 7: Emerging Hot Spot Analysis: sfdep methods",
     "section": "Computing Gi*",
-    "text": "Computing Gi*\n\n\ngi_stars <- GDPPC_nb %>% \n  group_by(Year) %>% \n  mutate(gi_star = local_gstar_perm(\n    GDPPC, nb, wt)) %>% \n  tidyr::unnest(gi_star)"
+    "text": "Computing Gi*\nNext, we will compute the local Gi* statistics.\n\nDeriving the spatial weights\nThe code chunk below will be used to identify neighbors and to derive an inverse distance weights.\n\n\nGDPPC_nb <- GDPPC_st %>%\n  activate(\"geometry\") %>%\n  mutate(nb = include_self(st_contiguity(geometry)),\n         wt = st_inverse_distance(nb, geometry,\n                                  scale = 1,\n                                  alpha = 1),\n         .before = 1) %>%\n  set_nbs(\"nb\") %>%\n  set_wts(\"wt\")\n\n\n\n\n\n\n\n\nThings to learn from the code chunk above\n\n\n\n\nactivate() of dplyr package is used to activate the geometry context\nmutate() of dplyr package is used to create two new columns nb and wt.\nThen we will activate the data context again and copy over the nb and wt columns to each time-slice using set_nbs() and set_wts()\n\nrow order is very important so do not rearrange the observations after using set_nbs() or set_wts().\n\n\n\n\nNote that this dataset now has neighbors and weights for each time-slice.\n\nhead(GDPPC_nb)\n\n# A tibble: 6 × 5\n   Year County  GDPPC nb        wt       \n  <dbl> <chr>   <dbl> <list>    <list>   \n1  2005 Anxiang  8184 <int [6]> <dbl [6]>\n2  2005 Hanshou  6560 <int [6]> <dbl [6]>\n3  2005 Jinshi   9956 <int [5]> <dbl [5]>\n4  2005 Li       8394 <int [5]> <dbl [5]>\n5  2005 Linli    8850 <int [5]> <dbl [5]>\n6  2005 Shimen   9244 <int [6]> <dbl [6]>"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#arrange-to-show-significant-emerging-hotcold-spots",
@@ -326,14 +326,14 @@
     "href": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#performing-emerging-hotspot-analysis",
     "title": "In-class Exercise 7: Emerging Hot Spot Analysis: sfdep methods",
     "section": "Performing Emerging Hotspot Analysis",
-    "text": "Performing Emerging Hotspot Analysis\n\n\nehsa <- emerging_hotspot_analysis(\n  x = GDPPC_st, \n  .var = \"GDPPC\", \n  k = 1, \n  nsim = 99\n)\n\n\n\n\nggplot(data = ehsa,\n       aes(x = classification)) +\n  geom_bar()"
+    "text": "Performing Emerging Hotspot Analysis\nLastly, we will perform EHSA analysis by using emerging_hotspot_analysis() of sfdep package. It takes a spacetime object x (i.e. GDPPC_st), and the quoted name of the variable of interest (i.e. GDPPC) for .var argument. The k argument is used to specify the number of time lags which is set to 1 by default. Lastly, nsim map numbers of simulation to be performed.\n\n\nehsa <- emerging_hotspot_analysis(\n  x = GDPPC_st, \n  .var = \"GDPPC\", \n  k = 1, \n  nsim = 99\n)\n\n\n\nVisualising the distribution of EHSA classes\nIn the code chunk below, ggplot2 functions ised used to reveal the distribution of EHSA classes as a bar chart.\n\n\nggplot(data = ehsa,\n       aes(x = classification)) +\n  geom_bar()\n\n\n\n\n\nFigure above shows that sporadic cold spots class has the high numbers of county.\n\n\nVisualising EHSA\nIn this section, you will learn how to visualise the geographic distribution EHSA classes. However, before we can do so, we need to join both hunan and ehsa together by using the code chunk below.\n\n\nhunan_ehsa <- hunan %>%\n  left_join(ehsa,\n            by = join_by(County == location))\n\n\nNext, tmap functions will be used to plot a categorical choropleth map by using the code chunk below.\n\n\nehsa_sig <- hunan_ehsa  %>%\n  filter(p_value < 0.05)\ntmap_mode(\"plot\")\ntm_shape(hunan_ehsa) +\n  tm_polygons() +\n  tm_borders(alpha = 0.5) +\ntm_shape(ehsa_sig) +\n  tm_fill(\"classification\") + \n  tm_borders(alpha = 0.4)"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#visualising-ehsa",
     "href": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#visualising-ehsa",
     "title": "In-class Exercise 7: Emerging Hot Spot Analysis: sfdep methods",
     "section": "Visualising EHSA",
-    "text": "Visualising EHSA\n\nlisa_sig <- lisa  %>%\n  filter(p_ii < 0.05)\ntmap_mode(\"plot\")\ntm_shape(lisa) +\n  tm_polygons() +\n  tm_borders(alpha = 0.5) +\ntm_shape(lisa_sig) +\n  tm_fill(\"mean\") + \n  tm_borders(alpha = 0.4)"
+    "text": "Visualising EHSA\n\nhunan_ehsa <- hunan %>%\n  left_join(ehsa,\n            by = join_by(County == location))\n\n\nehsa_sig <- hunan_ehsa  %>%\n  filter(p_value < 0.05)\ntmap_mode(\"plot\")\ntm_shape(hunan_ehsa) +\n  tm_polygons() +\n  tm_borders(alpha = 0.5) +\ntm_shape(ehsa_sig) +\n  tm_fill(\"classification\") + \n  tm_borders(alpha = 0.4)"
   },
   {
     "objectID": "index.html",
@@ -362,5 +362,12 @@
     "title": "In-class Exercise 7: Global and Local Measures of Spatial Association - sfdep methods",
     "section": "Visualising hot spot and cold spot areas",
     "text": "Visualising hot spot and cold spot areas\nNow, we are ready to plot the significant (i.e. p-values less than 0.05) hot spot and cold spot areas by using appropriate tmap functions as shown below.\n\n\nHCSA_sig <- HCSA  %>%\n  filter(p_sim < 0.05)\ntmap_mode(\"plot\")\ntm_shape(HCSA) +\n  tm_polygons() +\n  tm_borders(alpha = 0.5) +\ntm_shape(HCSA_sig) +\n  tm_fill(\"gi_star\") + \n  tm_borders(alpha = 0.4)\n\n\n\n\n\nFigure above reveals that there is one hot spot area and two cold spot areas. Interestingly, the hot spot areas coincide with the High-high cluster identifies by using local Moran’s I method in the earlier sub-section."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#computing-gi-1",
+    "href": "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html#computing-gi-1",
+    "title": "In-class Exercise 7: Emerging Hot Spot Analysis: sfdep methods",
+    "section": "Computing Gi*",
+    "text": "Computing Gi*\nWe can use these new columns to manually calculate the local Gi* for each location. We can do this by grouping by Year and using local_gstar_perm() of sfdep package. After which, we use unnest() to unnest gi_star column of the newly created gi_starts data.frame.\n\n\ngi_stars <- GDPPC_nb %>% \n  group_by(Year) %>% \n  mutate(gi_star = local_gstar_perm(\n    GDPPC, nb, wt)) %>% \n  tidyr::unnest(gi_star)"
   }
 ]
