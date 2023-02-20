@@ -3,7 +3,7 @@ title: "In-class Exercise 7: Global and Local Measures of Spatial Association - 
 author: "Dr. Kam Tin Seong"
 format: 
   html:
-    fontsize: 20px
+    fontsize: 18px
 execute: 
   echo: true
   eval: true
@@ -169,15 +169,20 @@ wm_q
 
 ### Computing Global Moran' I
 
+In the code chunk below, global_moran() function is used to compute the Moran's I value.  Different from spdep package, the output is a tibble data.frame. 
+
 ::: {style="font-size: 1.5em"}
 ```{r}
 moranI <- global_moran(wm_q$GDPPC,
                        wm_q$nb,
                        wm_q$wt)
+glimpse(moranI)
 ```
 :::
 
-### Performing Global Moran'I test
+### Performing Global Moran'sI test
+
+In general, Moran's I test will be performed instead of just computing the Moran's I statistics.  With sfdep package, Moran's I test can be performed by using [`global_moran_test()`](https://sfdep.josiahparry.com/reference/global_moran_test.html) as shown in the code chunk below.  
 
 ::: {style="font-size: 1.5em"}
 ```{r}
@@ -187,11 +192,23 @@ global_moran_test(wm_q$GDPPC,
 ```
 :::
 
+::: callout-tip
+- The default for `alternative` argument is "two.sided". Other supported arguments are "greater" or "less".
+randomization, and 
+- By default the `randomization` argument is **TRUE**. If FALSE, under the assumption of normality.
+:::
+
 ### Performing Global Moran'I permutation test
+
+In practice, monte carlo simulation should be used to perform the statistical test.  For **sfdep**, it is supported by [`globel_moran_perm()`](https://sfdep.josiahparry.com/reference/global_moran_perm.html)
+
+It is alway a good practice to use `set.seed()` before performing simulation.  This is to ensure that the computation is reproducible. 
 
 ```{r}
 set.seed(1234)
 ```
+
+Next, `global_moran_perm()` is used to perform Monte Carlo simulation.
 
 ::: {style="font-size: 1.5em"}
 ```{r}
@@ -202,7 +219,16 @@ global_moran_perm(wm_q$GDPPC,
 ```
 :::
 
+The report above show that the p-value is smaller than alpha value of 0.05.  Hence, reject the null hypothesis that the spatial patterns spatial independent.  Because the Moran's I statistics is greater than 0. We can infer the spatial distribution shows sign of clustering.  
+
+::: callout-tip
+# Reminder
+The numbers of simulation is alway equal to nsim + 1.  This mean in nsim = 99.  This mean 100 simulation will be performed. 
+:::
+
 ## Computing local Moran's I
+
+In this section, you will learn how to compute Local Moran's I of GDPPC at county level by using [`local_moran()`](https://sfdep.josiahparry.com/reference/local_moran.html) of sfdep package.
 
 ::: {style="font-size: 1.5em"}
 ```{r}
@@ -211,11 +237,24 @@ lisa <- wm_q %>%
     GDPPC, nb, wt, nsim = 99),
          .before = 1) %>%
   unnest(local_moran)
-lisa
 ```
 :::
 
+The output of `local_moran()` is a  sf data.frame containing the columns ii, eii, var_ii, z_ii, p_ii, p_ii_sim, and p_folded_sim. 
+
+- ii: local moran statistic
+- eii: expectation of local moran statistic; for localmoran_permthe permutation sample means 
+- var_ii: variance of local moran statistic; for localmoran_permthe permutation sample standard deviations
+- z_ii: standard deviate of local moran statistic; for localmoran_perm based on permutation sample means and standard deviations 
+p_ii: p-value of local moran statistic using pnorm(); for localmoran_perm using standard deviatse based on permutation sample means and standard deviations
+p_ii_sim: For `localmoran_perm()`, `rank()` and `punif()` of observed statistic rank for [0, 1] p-values using `alternative=`
+-p_folded_sim: the simulation folded [0, 0.5] range ranked p-value (based on https://github.com/pysal/esda/blob/4a63e0b5df1e754b17b5f1205b cadcbecc5e061/esda/crand.py#L211-L213)
+- skewness: For `localmoran_perm`, the output of e1071::skewness() for the permutation samples underlying the standard deviates
+- kurtosis: For `localmoran_perm`, the output of e1071::kurtosis() for the permutation samples underlying the standard deviates.
+
 ### Visualising local Moran's I
+
+In this code chunk below, tmap functions are used prepare a choropleth map by using value in the *ii* field.  
 
 ::: {style="font-size: 1.5em"}
 ```{r}
@@ -224,24 +263,35 @@ tmap_mode("plot")
 tm_shape(lisa) +
   tm_fill("ii") + 
   tm_borders(alpha = 0.5) +
-  tm_view(set.zoom.limits = c(6,8))
+  tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "local Moran's I of GDPPC",
+            main.title.size = 0.8)
 ```
 :::
 
 ### Visualising p-value of local Moran's I
 
+In the code chunk below, tmap functions are used prepare a choropleth map by using value in the *p_ii_sim* field.
+
 ::: {style="font-size: 1.5em"}
 ```{r}
 tmap_mode("plot")
 tm_shape(lisa) +
-  tm_fill("p_ii") + 
-  tm_borders(alpha = 0.5)
+  tm_fill("p_ii_sim") + 
+  tm_borders(alpha = 0.5) +
+   tm_layout(main.title = "p-value of local Moran's I",
+            main.title.size = 0.8)
 ```
 :::
 
+::: callout-warning
+For p-values, the appropriate classification should be 0.001, 0.01, 0.05 and not significant instead of using default classification scheme.
+:::
+
+
 ### Visuaising local Moran's I and p-value
 
-For effective comparison, you can plot both maps next to each other as shown below.
+For effective comparison, it will be better for us to plot both maps next to each other as shown below.
 
 ::: {style="font-size: 1.5em"}
 ```{r}
@@ -264,11 +314,14 @@ map2 <- tm_shape(lisa) +
             main.title.size = 0.8)
 
 tmap_arrange(map1, map2, ncol = 2)
-
 ```
 :::
 
-## Visualising local Moran's I
+### Visualising LISA map
+
+LISA map is a categorical map showing outliers and clusters.  There are two types of outliers namely: High-Low and Low-High outliers.  Likewise, there are two type of clusters namely: High-High and Low-Low cluaters.  In fact, LISA map is an interpreted map by combining local Moran's I of geographical areas and their respective p-values.      
+
+In lisa sf data.frame, we can find three fields contain the LISA categories.  They are *mean*, *median* and *pysal*.  In general, classification in *mean* will be used as shown in the code chunk below.  
 
 ::: {style="font-size: 1.5em"}
 ```{r}
@@ -284,13 +337,25 @@ tm_shape(lisa_sig) +
 ```
 :::
 
-## Hot Spot and Cold Spot Area Analysis
+## Hot Spot and Cold Spot Area Analysis (HCSA)
 
-## Computing local Moran's I
+HCSA uses spatial weights to identify locations of statistically significant hot spots and cold spots in an spatially weighted attribute that are in proximity to one another based on a calculated distance. The analysis groups features when similar high (hot) or low (cold) values are found in a cluster. The polygon features usually represent administration boundaries or a custom grid structure.
+
+## Computing local Gi* statistics
+
+```{r}
+wm_idw <- hunan_GDPPC %>%
+  mutate(nb = st_contiguity(geometry),
+         wts = st_inverse_distance(nb, geometry,
+                                   scale = 1,
+                                   alpha = 1),
+         .before = 1)
+```
+
 
 ::: {style="font-size: 1.5em"}
 ```{r}
-HCSA <- wm_q %>% 
+HCSA <- wm_idw %>% 
   mutate(local_Gi = local_gstar_perm(
     GDPPC, nb, wt, nsim = 99),
          .before = 1) %>%
@@ -352,118 +417,19 @@ tmap_arrange(map1, map2, ncol = 2)
 ```
 :::
 
-## Visualising local Moran's I
+## Visualising hot spot and cold spot areas
 
 ::: {style="font-size: 1.5em"}
 ```{r}
-lisa_sig <- lisa  %>%
-  filter(p_ii < 0.05)
+HCSA_sig <- HCSA  %>%
+  filter(p_sim < 0.05)
 tmap_mode("plot")
-tm_shape(lisa) +
+tm_shape(HCSA) +
   tm_polygons() +
   tm_borders(alpha = 0.5) +
-tm_shape(lisa_sig) +
-  tm_fill("mean") + 
+tm_shape(HCSA_sig) +
+  tm_fill("gi_star") + 
   tm_borders(alpha = 0.4)
 ```
 :::
 
-### Deriving contiguity weights: Rooks method
-
-::: callout-note
-# Do It Yourself!
-
-Using the steps you just learned, derive a contiguity weights using Rooks method.
-:::
-
-```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
-wm_r <- hunan %>%
-  mutate(nb = st_contiguity(geometry,
-                            queen = FALSE),
-         wt = st_weights(nb),
-         .before = 1) 
-```
-
-## Distance-based Weights
-
-There are three popularly used distance-based spatial weights, they are:
-
--   fixed distance weights,
--   adaptive distance weights, and
--   inverse distance weights (IDW).
-
-### Deriving fixed distance weights
-
-Before we can derive the fixed distance weights, we need to determine the upper limit for distance band by using the steps below:
-
-```{r}
-geo <- sf::st_geometry(hunan_GDPPC)
-nb <- st_knn(geo, longlat = TRUE)
-dists <- unlist(st_nb_dists(geo, nb))
-```
-
-::: callout-tip
-# Things to learn from the code chunk above
-
--   [`st_nb_dists()`](https://sfdep.josiahparry.com/reference/st_nb_dists.html) of sfdep is used to calculate the nearest neighbour distance. The output is a list of distances for each observation's neighbors list.
--   [`unlist()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/unlist) of Base R is then used to return the output as a vector so that the summary statistics of the nearest neighbour distances can be derived.
-:::
-
-Now, we will go ahead to derive summary statistics of the nearest neighbour distances vector (i.e. dists) by usign the coced chunk below.
-
-```{r}
-summary(dists)
-```
-
-The summary statistics report above shows that the maximum nearest neighbour distance is 65.80km. By using a threshold value of 66km will ensure that each area will have at least one neighbour.
-
-Now we will go ahead to compute the fixed distance weights by using the code chunk below.
-
-```{r}
-wm_fd <- hunan_GDPPC %>%
-  dplyr::mutate(nb = st_dist_band(geometry,
-                                  upper = 66),
-               wt = st_weights(nb),
-               .before = 1)
-```
-
-::: callout-tip
-# Things to learn from the code chunk above
-
--   [`st_dists_band()`](https://sfdep.josiahparry.com/reference/st_dist_band.html) of sfdep is used to identify neighbors based on a distance band (i.e. 66km). The output is a list of neighbours (i.e. nb).
--   [`st_weights()`](https://sfdep.josiahparry.com/reference/st_weights.html) is then used to calculate polygon spatial weights of the nb list. Note that:
-    -   the default `style` argument is set to "W" for row standardized weights, and
-    -   the default `allow_zero` is set to TRUE, assigns zero as lagged value to zone without neighbors.
-:::
-
-::: callout-note
-# Do It Yourself
-
-Using the steps you learned in previous section, examine the data frame of the fixed distance weights.
-:::
-
-## Deriving adaptive distance weights
-
-In this section you will learn how to derive an adaptive distance weights.
-
-```{r}
-wm_ad <- hunan_GDPPC %>% 
-  mutate(nb = st_knn(geometry,
-                     k=8),
-         wt = st_weights(nb),
-               .before = 1)
-```
-
-### Calculate inverse distance weights
-
-```{r}
-#| eval: false
-wm_idw <- hunan_GDPPC %>%
-  mutate(nb = st_contiguity(geometry),
-         wts = st_inverse_distance(nb, geometry,
-                                   scale = 1,
-                                   alpha = 1),
-         .before = 1)
-```
