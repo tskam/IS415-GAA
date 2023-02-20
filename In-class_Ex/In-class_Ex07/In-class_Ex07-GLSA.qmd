@@ -1,6 +1,8 @@
 ---
 title: "In-class Exercise 7: Global and Local Measures of Spatial Association - sfdep methods"
 author: "Dr. Kam Tin Seong"
+date: "13 February 2023"
+date-modified: "`r Sys.Date()`"
 format: 
   html:
     fontsize: 18px

@@ -71,7 +71,6 @@ childcare_ppp
 
 ### Handling duplicated point events
 
-
 ```{r}
 childcare_ppp_jit <- rjitter(childcare_ppp, 
                              retry=TRUE, 
@@ -82,7 +81,6 @@ childcare_ppp_jit <- rjitter(childcare_ppp,
 ```{r}
 any(duplicated(childcare_ppp_jit))
 ```
-
 
 ### Creating owin object
 
