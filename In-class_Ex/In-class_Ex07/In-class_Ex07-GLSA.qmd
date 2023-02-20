@@ -421,6 +421,8 @@ tmap_arrange(map1, map2, ncol = 2)
 
 ## Visualising hot spot and cold spot areas
 
+Now, we are ready to plot the significant (i.e. p-values less than 0.05) hot spot and cold spot areas by using appropriate tmap functions as shown below. 
+
 ::: {style="font-size: 1.5em"}
 ```{r}
 HCSA_sig <- HCSA  %>%
@@ -434,4 +436,6 @@ tm_shape(HCSA_sig) +
   tm_borders(alpha = 0.4)
 ```
 :::
+
+Figure above reveals that there is one hot spot area and two cold spot areas.  Interestingly, the hot spot areas coincide with the High-high cluster identifies by using local Moran's I method in the earlier sub-section. 
 

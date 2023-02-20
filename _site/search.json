@@ -361,6 +361,6 @@
     "href": "In-class_Ex/In-class_Ex07/In-class_Ex07-GLSA.html#visualising-hot-spot-and-cold-spot-areas",
     "title": "In-class Exercise 7: Global and Local Measures of Spatial Association - sfdep methods",
     "section": "Visualising hot spot and cold spot areas",
-    "text": "Visualising hot spot and cold spot areas\n\n\nHCSA_sig <- HCSA  %>%\n  filter(p_sim < 0.05)\ntmap_mode(\"plot\")\ntm_shape(HCSA) +\n  tm_polygons() +\n  tm_borders(alpha = 0.5) +\ntm_shape(HCSA_sig) +\n  tm_fill(\"gi_star\") + \n  tm_borders(alpha = 0.4)"
+    "text": "Visualising hot spot and cold spot areas\nNow, we are ready to plot the significant (i.e. p-values less than 0.05) hot spot and cold spot areas by using appropriate tmap functions as shown below.\n\n\nHCSA_sig <- HCSA  %>%\n  filter(p_sim < 0.05)\ntmap_mode(\"plot\")\ntm_shape(HCSA) +\n  tm_polygons() +\n  tm_borders(alpha = 0.5) +\ntm_shape(HCSA_sig) +\n  tm_fill(\"gi_star\") + \n  tm_borders(alpha = 0.4)\n\n\n\n\n\nFigure above reveals that there is one hot spot area and two cold spot areas. Interestingly, the hot spot areas coincide with the High-high cluster identifies by using local Moran’s I method in the earlier sub-section."
   }
 ]
