@@ -24,11 +24,23 @@ website:
         - text: "In-class Exercise 7: GLSA"
           href: "In-class_Ex/In-class_Ex07/In-class_Ex07-GLSA.html"
         - text: "In-class Exercise 7: EHSA"
-          href: "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html"  
+          href: "In-class_Ex/In-class_Ex07/In-class_Ex07_EHSA.html"
+        - text: "In-class Exercise 8: gwr"
+          href: "In-class_Ex/In-class_Ex08/In-class_Ex08_gwr.html"
+        - text: "In-class Exercise 9: gwML"
+          href: "In-class_Ex/In-class_Ex09/In-class_Ex09_gwML.html"
+        - text: "In-class Exercise 10: SIM"
+          href: "In-class_Ex/In-class_Ex10/In-class_Ex10_SIM.html"
+        - text: "In-class Exercise 11: Accessibility Models"
+          href: "In-class_Ex/In-class_Ex11/In-class_Ex11_ACC.html"  
     - text: "Take-home Exercise"
       menu:
         - text: "Take-home Exercise 1"
           href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html"
+        - text: "Take-home Exercise 2"
+          href: "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html"
+        - text: "Take-home Exercise 3"
+          href: "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html"  
     right:
       - href: index.qmd
         text: Home
