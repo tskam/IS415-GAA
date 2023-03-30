@@ -1,0 +1,503 @@
+---
+title: "In-class Exercise 11: Calibrating Spatial Interaction Models (SIM) with R"
+format: html
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual
+---
+
+## Getting Started
+
+```{r}
+pacman::p_load(tmap, sf, sp, caret, stplanr, 
+               reshape2, broom, tidyverse)
+```
+
+## Preparing the Flow Data
+
+### Importing the OD data
+
+Firstly, we will import the Passenger Volume by Origin Destination Bus Stops data set downloaded from LTA DataMall by using read_csv() of readr package.
+
+```{r}
+odbus <- read_csv("data/aspatial/origin_destination_bus_202210.csv")
+```
+
+A quick check of odbus tibble data frame shows that the values in OROGIN_PT_CODE and DESTINATON_PT_CODE are in numeric data type. Hence, the code chunk below is used to convert these data values into character data type.
+
+```{r}
+odbus$ORIGIN_PT_CODE <- as.factor(odbus$ORIGIN_PT_CODE)
+odbus$DESTINATION_PT_CODE <- as.factor(odbus$DESTINATION_PT_CODE) 
+```
+
+### Extracting the study data 
+
+For the purpose of this exercise, we will extract commuting flows on weekday and between 7 and 9 o'clock.
+
+```{r}
+odbus7_9 <- odbus %>%
+  filter(DAY_TYPE == "WEEKDAY") %>%
+  filter(TIME_PER_HOUR >= 7 &
+           TIME_PER_HOUR <= 9) %>%
+  group_by(ORIGIN_PT_CODE,
+           DESTINATION_PT_CODE) %>%
+  summarise(TRIPS = sum(TOTAL_TRIPS))
+```
+
+We will save the output in rds format for future used.
+
+```{r}
+write_rds(odbus7_9, "data/rds/odbus7_9.rds")
+```
+
+The code chunk below will be used to import the save odbus7_9.rds into R environment. 
+
+```{r}
+odbus7_9 <- read_rds("data/rds/odbus7_9.rds")
+```
+
+## Working with Geospatial Data
+
+For the purpose of this exercise, two geospatial data will be used. They are:
+
+- BusStop: This data provides the location of bus stop as at last quarter of 2022.
+- MPSZ-2019: This data provides the sub-zone boundary of URA Master Plan 2019. 
+
+Both data sets are in ESRI shapefile format.
+
+### Importing geospatial data
+
+Two geospatial data will be used in this exercise, they are:
+
+```{r}
+busstop <- st_read(dsn = "data/geospatial",
+                   layer = "BusStop") %>%
+  st_transform(crs = 3414)
+```
+
+```{r}
+mpsz <- st_read(dsn = "data/geospatial",
+                   layer = "MPSZ-2019") %>%
+  st_transform(crs = 3414)
+mpsz
+```
+
+::: callout-note
+-   `st_read()` function of sf package is used to import the shapefile into R as sf data frame.
+-   `st_transform()` function of sf package is used to transform the projection to crs 3414.
+:::
+
+## Geospatial data wrangling
+
+### Combining Busstop and mpsz
+
+Code chunk below populates the planning subzone code (i.e. SUBZONE_C) of mpsz sf data frame into busstop sf data frame.
+
+```{r}
+busstop_mpsz <- st_intersection(busstop, mpsz) %>%
+  select(BUS_STOP_N, SUBZONE_C) %>%
+  st_drop_geometry()
+```
+
+::: callout-note
+-   `st_intersection()` is used to perform point and polygon overly and the output will be in point sf object.
+-   `select()` of dplyr package is then use to retain only BUS_STOP_N and SUBZONE_C in the busstop_mpsz sf data frame.
+-   five bus stops are excluded in the resultant data frame because they are outside of Singapore bpundary.
+:::
+
+Before moving to the next step, it is wise to save the output into rds format.
+
+```{r}
+write_rds(busstop_mpsz, "data/rds/busstop_mpsz.csv")  
+```
+
+Next, we are going to append the planning subzone code from busstop_mpsz data frame onto odbus7_9 data frame.
+
+```{r}
+od_data <- left_join(odbus7_9 , busstop_mpsz,
+            by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+  rename(ORIGIN_BS = ORIGIN_PT_CODE,
+         ORIGIN_SZ = SUBZONE_C,
+         DESTIN_BS = DESTINATION_PT_CODE)
+```
+
+Before continue, it is a good practice for us to check for duplicating records.
+
+```{r}
+duplicate <- od_data %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup()
+```
+
+If duplicated records are found, the code chunk below will be used to retain the unique records.
+
+```{r}
+od_data <- unique(od_data)
+```
+
+It will be a good practice to confirm if the duplicating records issue has been addressed fully.
+
+Next, we will update od_data data frame cwith the planning subzone codes.
+
+```{r}
+od_data <- left_join(od_data , busstop_mpsz,
+            by = c("DESTIN_BS" = "BUS_STOP_N")) 
+```
+
+```{r}
+duplicate <- od_data %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup()
+
+```
+
+```{r}
+od_data <- unique(od_data)
+```
+
+```{r}
+od_data <- od_data %>%
+  rename(DESTIN_SZ = SUBZONE_C) %>%
+  drop_na()
+```
+
+It is time to save the output into an rds file format.
+
+```{r}
+write_rds(od_data, "data/rds/od_data.rds")
+```
+
+```{r}
+od_data <- read_rds("data/rds/od_data.rds")
+```
+
+## Visualising the Geospatial Data
+
+```{r}
+tmap_mode("plot")
+tmap_options(check.and.fix = TRUE)
+qtm(mpsz)
+```
+
+# Viewing the Subzone spatial file
+
+```{r}
+head(mpsz, 10)
+```
+
+# Isolating SUBZONE_C (subzone_code) into a new df
+
+```{r}
+mpsz <- mpsz[order(mpsz$SUBZONE_C),]
+head(mpsz, 10)
+```
+
+## Computing Distance Matrix
+
+The are at least two ways to compute the required distance matrix. One is based on sf and the other is based on sp. Past experience shows that computing distance matrix by using sf function took relatively longer time that sp method. In view of this, sp method is used in the code chunks below.
+
+### Converting from sf data.table to SpatialPolygonDataFrame
+
+```{r}
+mpsz_sp <- as(mpsz, "Spatial")
+```
+
+### Computing the distance matrix
+
+```{r}
+dist <- spDists(mpsz_sp)
+dist 
+```
+
+### Sorting the distance matrix by plannint sub-zone code
+
+```{r}
+sz_names <- mpsz$SUBZONE_C
+```
+
+### Attaching SUBZONE_C to row and column for distance matrix matching ahead
+
+```{r}
+colnames(dist) <- paste0(sz_names)
+rownames(dist) <- paste0(sz_names)
+```
+
+### Pivoting distance value by SUBZONE_C
+
+```{r}
+distPair <- melt(dist) %>%
+  rename(dist = value)
+head(distPair, 10)
+```
+
+### Updating intra-zonal distances
+
+```{r}
+distPair %>%
+  filter(dist > 0) %>%
+  summary()
+```
+
+A constant distance value of 50m is added into intra-zones
+
+```{r}
+distPair$dist <- ifelse(distPair$dist == 0,
+                        50, distPair$dist)
+```
+
+The code chunk below will be used to check the result data.frame.
+
+```{r}
+distPair %>%
+  summary()
+```
+
+The code chunk below is used to rename the origin and destination fields.
+
+```{r}
+distPair <- distPair %>%
+  rename(orig = Var1,
+         dest = Var2)
+```
+
+Lastly, code chunk is used to save the data frame for future use.
+
+```{r}
+write_rds(distPair, "data/distPair.rds") 
+```
+
+## Preparing flow data
+
+The code chunk below is used to prepared the flow_data.
+
+```{r}
+od_data <- read_rds("data/rds/od_data.rds")
+```
+
+```{r}
+flow_data <- od_data %>%
+  group_by(ORIGIN_SZ, DESTIN_SZ) %>% 
+  summarize(TRIPS = sum(TRIPS)) 
+```
+
+The code chunk below is used to view the passenger volume df
+
+```{r}
+head(flow_data, 10)
+```
+
+### Separating intra-flow from passenger volume df
+
+```{r}
+flow_data$FlowNoIntra <- ifelse(
+  flow_data$ORIGIN_SZ == flow_data$DESTIN_SZ, 
+  0, flow_data$TRIPS)
+flow_data$offset <- ifelse(
+  flow_data$ORIGIN_SZ == flow_data$DESTIN_SZ, 
+  0.000001, 1)
+```
+
+### Combining passenger volume data with distance value
+
+```{r}
+flow_data$ORIGIN_SZ <- as.factor(flow_data$ORIGIN_SZ)
+flow_data$DESTIN_SZ <- as.factor(flow_data$DESTIN_SZ)
+
+```
+
+```{r}
+flow_data1 <- flow_data %>%
+  left_join (distPair,
+             by = c("ORIGIN_SZ" = "orig",
+                    "DESTIN_SZ" = "dest"))
+```
+
+## Creating the Desire Lines
+
+In this section, you will learn how to prepare a desire line by using **stplanr** package.
+
+### Removing intra-zonal flows
+
+We will not plot the intra-zonal flows. The code chunk below will be used to remove intra-zonal flows.
+
+```{r}
+flow_data1 <- flow_data1[flow_data1$ORIGIN_SZ!=flow_data1$DESTIN_SZ,]
+```
+
+The code chunk below removes all but the origin, destination and flow columns.
+
+```{r}
+OD_data <- flow_data1[,c(1,2,3)]
+```
+
+### Creating desire lines
+
+In this code chunk below, `od2line()` of **stplanr** package is used to create the desire lines.
+
+```{r}
+flowLine <- od2line(flow = OD_data, 
+                    zones = mpsz,
+                    zone_code = "SUBZONE_C")
+```
+
+### Visualising the desire lines
+
+To visualise the resulting desribe lines, the code chunk below is used.
+
+```{r}
+tm_shape(mpsz) +
+  tm_polygons() +
+tm_shape(flowLine) +
+  tm_lines(lwd = "TRIPS",
+           style = "quantile",
+           scale = c(0.1, 1, 3, 5, 10),
+           n = 5,
+           alpha = 0.1)
+```
+
+::: callout-warning
+Be patient, the rendering process takes more time because of the transparency argument (i.e. alpha)
+:::
+
+```{r}
+pop <- read_csv("data/aspatial/pop.csv")
+```
+
+```{r}
+pop <- pop %>%
+  left_join(mpsz,
+            by = c("PA" = "PLN_AREA_N",
+                   "SZ" = "SUBZONE_N")) %>%
+  select(1:6) %>%
+  rename(SZ_NAME = SZ,
+         SZ = SUBZONE_C)
+```
+
+## Updating flow data with population variables
+
+### Origin population
+
+```{r}
+flow_data1 <- flow_data1 %>%
+  left_join(pop,
+            by = c(ORIGIN_SZ = "SZ")) %>%
+  rename(ORIGIN_AGE7_12 = AGE7_12,
+         ORIGIN_AGE13_24 = AGE13_24,
+         ORIGIN_AGE25_64 = AGE25_64) %>%
+  select(-c(PA, SZ_NAME))
+
+```
+
+### Destination Population
+
+```{r}
+flow_data1 <- flow_data1 %>%
+  left_join(pop,
+            by = c(DESTIN_SZ = "SZ")) %>%
+  rename(DESTIN_AGE7_12 = AGE7_12,
+         DESTIN_AGE13_24 = AGE13_24,
+         DESTIN_AGE25_64 = AGE25_64) %>%
+  select(-c(PA, SZ_NAME))
+```
+
+```{r}
+write_rds(flow_data1, "data/rds/SIM_data")
+```
+
+```{r}
+SIM_data <- read_rds("data/rds/SIM_data")
+```
+
+## Calibrating Spatial Interaction Models
+
+### Unconstrained Spatial Interaction Model
+
+In this section, you will learn how to calibrate an unconstrained spatial interaction model by using `glm()` of Base Stats. The explanatory variables are origin population by different age cohort, destination population by different age cohort (i.e. wj3_destmedinc) and distance between origin and destination in km (i.e. dist).
+
+The code chunk used to calibrate to model is shown below:
+
+```{r}
+uncoSIM <- glm(formula = TRIPS ~ log(dist),
+              family = poisson(link = "log"),
+              data = SIM_data,
+              na.action = na.exclude)
+summary(uncoSIM)
+```
+
+```{r}
+uncoSIM$origSIMFitted <- round(fitted(uncoSIM),0)
+postResample(uncoSIM$data$TRIPS,
+             uncoSIM$origSIMFitted)
+```
+
+### Origin (Production) constrained SIM
+
+```{r}
+origin_SIM <- glm(formula = TRIPS ~ ORIGIN_SZ + 
+                 DESTIN_AGE25_64 + log(dist),
+              family = poisson(link = "log"),
+              data = SIM_data,
+              na.action = na.exclude)
+summary(origin_SIM)
+```
+
+We can examine how the constraints hold for destinations this time.
+
+Firstly, we will fitted the model and roundup the estimated values by using the code chunk below.
+
+```{r}
+origin_SIM$origSIMFitted <- round(fitted(origin_SIM),0)
+```
+
+Next, we will used the step you had learned in previous section to create pivot table to turn paired list into matrix.
+
+```{r}
+postResample(origin_SIM$data$TRIPS,
+             origin_SIM$origSIMFitted)
+```
+
+What about aading new variables?
+
+```{r}
+origin_SIM <- glm(formula = TRIPS ~ ORIGIN_SZ + 
+                    DESTIN_AGE7_12 + 
+                    DESTIN_AGE13_24 +
+                    DESTIN_AGE25_64 +
+                    log(dist),
+              family = poisson(link = "log"),
+              data = SIM_data,
+              na.action = na.exclude)
+summary(origin_SIM)
+```
+
+We can examine how the constraints hold for destinations this time.
+
+Firstly, we will fitted the model and roundup the estimated values by using the code chunk below.
+
+```{r}
+origin_SIM$origSIMFitted <- round(fitted(origin_SIM),0)
+```
+
+Next, we will used the step you had learned in previous section to create pivot table to turn paired list into matrix.
+
+```{r}
+postResample(origin_SIM$data$TRIPS,
+             origin_SIM$origSIMFitted)
+```
+
+```{r}
+df <- as.data.frame(origin_SIM$fitted.values) %>%
+  round(digits = 0)
+```
+
+```{r}
+SIM_data <- SIM_data %>%
+  cbind(df) %>%
+  rename(origin_SIM = "origin_SIM$fitted.values")
+  
+
+```

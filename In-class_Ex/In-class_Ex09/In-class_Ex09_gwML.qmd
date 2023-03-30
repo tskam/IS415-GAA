@@ -17,7 +17,7 @@ Geospatial predictive modelling is conceptually rooted in the principle that the
 
 ### Learning outcome
 
-In this in-class exercise, you will learn how to build predictive model by using geographical random forest method.  By the end of this hands-on exercise, you will acquire the skills of:
+In this in-class exercise, you will learn how to build predictive model by using geographical random forest method. By the end of this hands-on exercise, you will acquire the skills of:
 
 -   preparing training and test data sets by using appropriate data sampling methods,
 -   calibrating predictive models by using both geospatial statistical learning and machine learning methods,
@@ -40,7 +40,7 @@ In this in-class exercise, you will learn how to build predictive model by using
         -   **Childcare service** data is a list of childcare services in Singapore. It is in geojson format.
         -   **Kindergartens** data is a list of kindergartens in Singapore. It is in geojson format.
     -   Downloaded from **Datamall.lta.gov.sg**.
-        -   **MRT** data is a list of MRT/LRT stations in Singapore with the station names and codes. It is in shapefile format.\
+        -   **MRT** data is a list of MRT/LRT stations in Singapore with the station names and codes. It is in shapefile format.
         -   **Bus stops** data is a list of bus stops in Singapore. It is in shapefile format.
 -   **Locational factors without geographic coordinates**:
     -   Downloaded from **Data.gov.sg**.
@@ -94,7 +94,7 @@ write_rds(test_data, "data/model/test_data.rds")
 
 ## Computing Correlation Matrix
 
-Before loading the predictors into a predictive model, it is always a good practice to use correlation matrix to examine if there is sign of multicolinearity.    
+Before loading the predictors into a predictive model, it is always a good practice to use correlation matrix to examine if there is sign of multicolinearity.
 
 ```{r}
 mdata_nogeo <- mdata %>%
@@ -109,9 +109,8 @@ corrplot::corrplot(cor(mdata_nogeo[, 2:17]),
 ```
 
 ::: callout-note
-The correlation matrix above shows that all the correlation values are below 0.8.  Hence, there is no sign of multicolinearity.
+The correlation matrix above shows that all the correlation values are below 0.8. Hence, there is no sign of multicolinearity.
 :::
-
 
 ## Retriving the Stored Data
 
@@ -215,11 +214,64 @@ The code chunk below will be used to save the model in rds format for future use
 write_rds(gwr_adaptive, "data/model/gwr_adaptive.rds")
 ```
 
-The code below can be used to display the model output.
+### Retrieve gwr output object
+
+The code chunk below will be used to retrieve the save gwr model object.
 
 ```{r}
 gwr_adaptive <- read_rds("data/model/gwr_adaptive.rds")
+```
+
+The code below can be used to display the model output.
+
+```{r}
 gwr_adaptive
+```
+
+### Converting the test data from sf data.frame to SpatialPointDataFrame
+
+```{r}
+test_data_sp <- test_data %>%
+  as_Spatial()
+test_data_sp
+```
+
+### Computing adaptive bandwidth for the test data
+
+```{r}
+#| eval: false
+gwr_bw_test_adaptive <- bw.gwr(resale_price ~ floor_area_sqm +
+                  storey_order + remaining_lease_mths +
+                  PROX_CBD + PROX_ELDERLYCARE + PROX_HAWKER +
+                  PROX_MRT + PROX_PARK + PROX_MALL + 
+                  PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN +
+                  WITHIN_350M_CHILDCARE + WITHIN_350M_BUS +
+                  WITHIN_1KM_PRISCH,
+                  data=test_data_sp,
+                  approach="CV",
+                  kernel="gaussian",
+                  adaptive=TRUE,
+                  longlat=FALSE)
+```
+
+### Computing predicted valuesthe test data
+
+```{r}
+#| eval: false
+gwr_pred <- gwr.predict(formula = resale_price ~
+                          floor_area_sqm + storey_order +
+                          remaining_lease_mths + PROX_CBD + 
+                          PROX_ELDERLYCARE + PROX_HAWKER + 
+                          PROX_MRT + PROX_PARK + PROX_MALL + 
+                          PROX_SUPERMARKET + WITHIN_350M_KINDERGARTEN +
+                          WITHIN_350M_CHILDCARE + WITHIN_350M_BUS + 
+                          WITHIN_1KM_PRISCH, 
+                        data=train_data_sp, 
+                        predictdata = test_data_sp, 
+                        bw=40, 
+                        kernel = 'gaussian', 
+                        adaptive=TRUE, 
+                        longlat = FALSE)
 ```
 
 ## Preparing coordinates data
@@ -253,7 +305,7 @@ train_data <- train_data %>%
 
 ## Calibrating Random Forest Model
 
-In this section, you will learn how to calibrate a model to predict HDB resale price by using random forest function of  [**ranger**](https://cran.r-project.org/web/packages/ranger/index.html) package.
+In this section, you will learn how to calibrate a model to predict HDB resale price by using random forest function of [**ranger**](https://cran.r-project.org/web/packages/ranger/index.html) package.
 
 ```{r}
 set.seed(1234)
@@ -264,10 +316,16 @@ rf <- ranger(resale_price ~ floor_area_sqm + storey_order +
                WITHIN_350M_CHILDCARE + WITHIN_350M_BUS + 
                WITHIN_1KM_PRISCH,
              data=train_data)
+rf
 ```
 
 ```{r}
-print(rf)
+write_rds(rf, "data/model/rf.rds")
+```
+
+```{r}
+rf <- read_rds("data/model/rf.rds")
+rf
 ```
 
 ## Calibrating Geographical Random Forest Model
@@ -300,7 +358,7 @@ Let's save the model output by using the code chunk below.
 write_rds(gwRF_adaptive, "data/model/gwRF_adaptive.rds")
 ```
 
-The code chunk below can be used to retreive the save model in future.
+The code chunk below can be used to retrieve the save model in future.
 
 ```{r}
 gwRF_adaptive <- read_rds("data/model/gwRF_adaptive.rds")
@@ -359,7 +417,7 @@ write_rds(test_data_p, "data/model/test_data_p.rds")
 
 ### Calculating Root Mean Square Error
 
-The root mean square error (RMSE) allows us to measure how far predicted values are from observed values in a regression analysis.  In the code chunk below, rmse() of Metrics package is used to compute the RMSE. 
+The root mean square error (RMSE) allows us to measure how far predicted values are from observed values in a regression analysis. In the code chunk below, rmse() of Metrics package is used to compute the RMSE.
 
 ```{r}
 rmse(test_data_p$resale_price, 
@@ -368,7 +426,7 @@ rmse(test_data_p$resale_price,
 
 ### Visualising the predicted values
 
-Alternatively, scatterplot can be used to visualise the actual resale price and the predicted resale price by using the code chunk below. 
+Alternatively, scatterplot can be used to visualise the actual resale price and the predicted resale price by using the code chunk below.
 
 ```{r}
 ggplot(data = test_data_p,
@@ -378,5 +436,5 @@ ggplot(data = test_data_p,
 ```
 
 ::: callout-note
-A better predictive model should have the scatter point close to the diagonal line. The scatter plot can be also used to detect if any outliers in the model. 
+A better predictive model should have the scatter point close to the diagonal line. The scatter plot can be also used to detect if any outliers in the model.
 :::
