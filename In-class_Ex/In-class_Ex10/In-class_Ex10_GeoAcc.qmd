@@ -176,10 +176,16 @@ distmat_km <- as.matrix(distmat/1000)
 
 ## Computing Distance matrix (Optional)
 
+In this section, you will learn how to compute a distance matrix by using `distance()` of **SpatialAcc** package.
+
+Firstly, `st_coordinates()` of sf package will be used to extract the coordinates from the *eldercare* and *hexagon* sf data frames. 
+
 ```{r}
 eldercare_coord <- st_coordinates(eldercare)
 hexagon_coord <- st_coordinates(hexagon)
 ```
+
+The code chunk below will be used to compute the distance matrix. 
 
 ```{r}
 EucMatrix <- SpatialAcc::distance(hexagon_coord,
@@ -187,17 +193,10 @@ EucMatrix <- SpatialAcc::distance(hexagon_coord,
                                  type = "euclidean")
 ```
 
-```{r}
-EucMatrix_km <- as.matrix(EucMatrix/1000)
-```
+Lastly, the code chunk below will be used to convert the unit of measurement from meter to kilometer.
 
 ```{r}
-TSFCA <- ac(p = hexagon$demand,
-            n = eldercare$capacity,
-            D = EucMatrix,
-            d0 = 5000,
-            power = 2,
-            family = "2SFCA")
+EucMatrix_km <- as.matrix(EucMatrix/1000)
 ```
 
 ## Modelling and Visualising Accessibility using Hansen Method

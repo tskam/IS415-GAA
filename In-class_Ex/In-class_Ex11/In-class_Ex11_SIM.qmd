@@ -32,7 +32,7 @@ odbus$ORIGIN_PT_CODE <- as.factor(odbus$ORIGIN_PT_CODE)
 odbus$DESTINATION_PT_CODE <- as.factor(odbus$DESTINATION_PT_CODE) 
 ```
 
-### Extracting the study data 
+### Extracting the study data
 
 For the purpose of this exercise, we will extract commuting flows on weekday and between 7 and 9 o'clock.
 
@@ -52,7 +52,7 @@ We will save the output in rds format for future used.
 write_rds(odbus7_9, "data/rds/odbus7_9.rds")
 ```
 
-The code chunk below will be used to import the save odbus7_9.rds into R environment. 
+The code chunk below will be used to import the save odbus7_9.rds into R environment.
 
 ```{r}
 odbus7_9 <- read_rds("data/rds/odbus7_9.rds")
@@ -62,8 +62,8 @@ odbus7_9 <- read_rds("data/rds/odbus7_9.rds")
 
 For the purpose of this exercise, two geospatial data will be used. They are:
 
-- BusStop: This data provides the location of bus stop as at last quarter of 2022.
-- MPSZ-2019: This data provides the sub-zone boundary of URA Master Plan 2019. 
+-   BusStop: This data provides the location of bus stop as at last quarter of 2022.
+-   MPSZ-2019: This data provides the sub-zone boundary of URA Master Plan 2019.
 
 Both data sets are in ESRI shapefile format.
 
