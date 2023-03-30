@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.269">
+<meta name="generator" content="quarto-1.2.335">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -197,12 +197,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="dropdown-text">In-class Exercise 9: gwML</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex10/In-class_Ex10_SIM.html">
- <span class="dropdown-text">In-class Exercise 10: SIM</span></a>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex10/In-class_Ex10_GeoAcc.html">
+ <span class="dropdown-text">In-class Exercise 10: GeoAcc</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex11/In-class_Ex11_ACC.html">
- <span class="dropdown-text">In-class Exercise 11: Accessibility Models</span></a>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex11/In-class_Ex11_SIM.html">
+ <span class="dropdown-text">In-class Exercise 11: SIM</span></a>
   </li>  
     </ul>
   </li>
@@ -317,7 +317,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">March 6, 2023</p>
+      <p class="date-modified">March 31, 2023</p>
     </div>
   </div>
     
@@ -851,22 +851,21 @@ Dimension:     XY
 Bounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812
 Geodetic CRS:  WGS 84
 # A tibble: 88 × 17
-    gi_star   e_gi     var_gi  p_value p_sim p_fol…¹ skewn…² kurto…³ nb    wts  
-      &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;nb&gt;  &lt;lis&gt;
- 1 -0.00567 0.0115 0.00000812  9.95e-1  0.82    0.41   1.03    1.23  &lt;int&gt; &lt;dbl&gt;
- 2 -0.235   0.0110 0.00000581  8.14e-1  1       0.5    0.912   1.05  &lt;int&gt; &lt;dbl&gt;
- 3  0.298   0.0114 0.00000776  7.65e-1  0.7     0.35   0.455  -0.732 &lt;int&gt; &lt;dbl&gt;
- 4  0.145   0.0121 0.0000111   8.84e-1  0.64    0.32   0.900   0.726 &lt;int&gt; &lt;dbl&gt;
- 5  0.356   0.0113 0.0000119   7.21e-1  0.64    0.32   1.08    1.31  &lt;int&gt; &lt;dbl&gt;
- 6 -0.480   0.0116 0.00000706  6.31e-1  0.82    0.41   0.364  -0.676 &lt;int&gt; &lt;dbl&gt;
- 7  3.66    0.0116 0.00000825  2.47e-4  0.02    0.01   0.909   0.664 &lt;int&gt; &lt;dbl&gt;
- 8  2.14    0.0116 0.00000714  3.26e-2  0.16    0.08   1.13    1.48  &lt;int&gt; &lt;dbl&gt;
- 9  4.55    0.0113 0.00000656  5.28e-6  0.02    0.01   1.36    4.14  &lt;int&gt; &lt;dbl&gt;
-10  1.61    0.0109 0.00000341  1.08e-1  0.18    0.09   0.269  -0.396 &lt;int&gt; &lt;dbl&gt;
-# … with 78 more rows, 7 more variables: NAME_2 &lt;chr&gt;, ID_3 &lt;int&gt;,
-#   NAME_3 &lt;chr&gt;, ENGTYPE_3 &lt;chr&gt;, County &lt;chr&gt;, GDPPC &lt;dbl&gt;,
-#   geometry &lt;POLYGON [°]&gt;, and abbreviated variable names ¹​p_folded_sim,
-#   ²​skewness, ³​kurtosis</code></pre>
+   gi_star   e_gi    var_gi p_value   p_sim p_folded_sim skewness kurtosis nb   
+     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;nb&gt; 
+ 1  0.0416 0.0114   6.41e-6  0.0493 9.61e-1         0.7      0.35    0.875 &lt;int&gt;
+ 2 -0.333  0.0106   3.84e-6 -0.0941 9.25e-1         1        0.5     0.661 &lt;int&gt;
+ 3  0.281  0.0126   7.51e-6 -0.151  8.80e-1         0.9      0.45    0.640 &lt;int&gt;
+ 4  0.411  0.0118   9.22e-6  0.264  7.92e-1         0.6      0.3     0.853 &lt;int&gt;
+ 5  0.387  0.0115   9.56e-6  0.339  7.34e-1         0.62     0.31    1.07  &lt;int&gt;
+ 6 -0.368  0.0118   5.91e-6 -0.583  5.60e-1         0.72     0.36    0.594 &lt;int&gt;
+ 7  3.56   0.0151   7.31e-6  2.61   9.01e-3         0.06     0.03    1.09  &lt;int&gt;
+ 8  2.52   0.0136   6.14e-6  1.49   1.35e-1         0.2      0.1     1.12  &lt;int&gt;
+ 9  4.56   0.0144   5.84e-6  3.53   4.17e-4         0.04     0.02    1.23  &lt;int&gt;
+10  1.16   0.0104   3.70e-6  1.82   6.86e-2         0.12     0.06    0.416 &lt;int&gt;
+# ℹ 78 more rows
+# ℹ 8 more variables: wts &lt;list&gt;, NAME_2 &lt;chr&gt;, ID_3 &lt;int&gt;, NAME_3 &lt;chr&gt;,
+#   ENGTYPE_3 &lt;chr&gt;, County &lt;chr&gt;, GDPPC &lt;dbl&gt;, geometry &lt;POLYGON [°]&gt;</code></pre>
 </div>
 </div>
 </div>
