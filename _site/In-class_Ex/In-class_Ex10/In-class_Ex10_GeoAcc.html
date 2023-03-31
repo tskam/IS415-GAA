@@ -284,8 +284,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#computing-sam-accessibility" id="toc-computing-sam-accessibility" class="nav-link" data-scroll-target="#computing-sam-accessibility">Computing SAM accessibility</a></li>
   <li><a href="#visualising-sams-accessibility" id="toc-visualising-sams-accessibility" class="nav-link" data-scroll-target="#visualising-sams-accessibility">Visualising SAM’s accessibility</a></li>
   <li><a href="#statistical-graphic-visualisation-2" id="toc-statistical-graphic-visualisation-2" class="nav-link" data-scroll-target="#statistical-graphic-visualisation-2">Statistical graphic visualisation</a></li>
-  <li><a href="#visualising-3sfca-accessibility" id="toc-visualising-3sfca-accessibility" class="nav-link" data-scroll-target="#visualising-3sfca-accessibility">Visualising 3SFCA accessibility</a></li>
-  <li><a href="#statistical-graphic-visualisation-3" id="toc-statistical-graphic-visualisation-3" class="nav-link" data-scroll-target="#statistical-graphic-visualisation-3">Statistical graphic visualisation</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -817,76 +815,6 @@ The code chunk below calculates Hansen’s accessibility using <em>ac()</em> of 
 <div class="cell-output-display">
 <p><img src="In-class_Ex10_GeoAcc_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
 </div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>DOMatrix <span class="ot">&lt;-</span> ODMatrix <span class="sc">%&gt;%</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(origin_id, destination_id, total_cost) <span class="sc">%&gt;%</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(origin_id, total_cost)<span class="sc">%&gt;%</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="st">'destination_id'</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>DOMatrix_km <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(DOMatrix<span class="sc">/</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>sfca <span class="ot">&lt;-</span> <span class="fu">spai_3sfca</span>(hexagon<span class="sc">$</span>demand,</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                   eldercare<span class="sc">$</span>capacity,</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                   DOMatrix_km,</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">step =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>hexagon_sfca <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(hexagon, sfca) <span class="sc">%&gt;%</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Acc3SFCA =</span> step3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="visualising-3sfca-accessibility" class="level3">
-<h3 class="anchored" data-anchor-id="visualising-3sfca-accessibility">Visualising 3SFCA accessibility</h3>
-<p>The code chunk below uses a collection of mapping fucntions of tmap package to create a high cartographic quality accessibility to eldercare centre in Singapore. Notice that <code>mapex</code> is reused for <em>bbox</em> argument.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(hexagon_sfca,</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">bbox =</span> mapex) <span class="sc">+</span> </span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"Acc3SFCA"</span>,</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="dv">10</span>,</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"quantile"</span>,</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">border.col =</span> <span class="st">"black"</span>,</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">border.lwd =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(eldercare) <span class="sc">+</span></span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_symbols</span>(<span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Accessibility to eldercare: SAM method"</span>,</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.position =</span> <span class="st">"center"</span>,</span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.size =</span> <span class="dv">2</span>,</span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.outside =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.height =</span> <span class="fl">0.45</span>, </span>
-<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.width =</span> <span class="fl">3.0</span>,</span>
-<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.format =</span> <span class="fu">list</span>(<span class="at">digits =</span> <span class="dv">3</span>),</span>
-<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"top"</span>),</span>
-<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">frame =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_compass</span>(<span class="at">type=</span><span class="st">"8star"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_scale_bar</span>(<span class="at">width =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
-<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_grid</span>(<span class="at">lwd =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="In-class_Ex10_GeoAcc_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="1152"></p>
-</div>
-</div>
-</section>
-<section id="statistical-graphic-visualisation-3" class="level3">
-<h3 class="anchored" data-anchor-id="statistical-graphic-visualisation-3">Statistical graphic visualisation</h3>
-<p>Now, we are going to compare the distribution of SAM accessibility values by URA Planning Region.</p>
-<p>Firstly, we need to add the planning region field into <em>hexagon_SAM</em> simple feature data frame by using the code chunk below.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>hexagon_SAM <span class="ot">&lt;-</span> <span class="fu">st_join</span>(hexagon_SAM, mpsz, </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">join =</span> st_intersects)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Next, ggplot() will be used to plot the distribution by using boxplot graphical method.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>hexagon_SAM, </span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> accSAM, </span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">x=</span> REGION_N)) <span class="sc">+</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">stat=</span><span class="st">"summary"</span>, </span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">fun.y=</span><span class="st">"mean"</span>, </span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span><span class="st">"red"</span>, </span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">size=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
