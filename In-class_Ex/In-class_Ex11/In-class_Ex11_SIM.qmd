@@ -630,8 +630,6 @@ In this section, we will fit a doubly constrained SIM by using the code chunk be
 dbcSIM <- glm(formula = TRIPS ~ 
                 ORIGIN_SZ + 
                 DESTIN_SZ + 
-                log(ORIGIN_AGE25_64) + 
-                log(DESTIN_AGE25_64) + 
                 log(dist),
               family = poisson(link = "log"),
               data = SIM_data,
