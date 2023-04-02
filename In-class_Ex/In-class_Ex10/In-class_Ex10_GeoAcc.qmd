@@ -178,14 +178,20 @@ distmat_km <- as.matrix(distmat/1000)
 
 In this section, you will learn how to compute a distance matrix by using `distance()` of **SpatialAcc** package.
 
-Firstly, `st_coordinates()` of sf package will be used to extract the coordinates from the *eldercare* and *hexagon* sf data frames. 
+Firstly, `st_coordinates()` of sf package will be used to extract the coordinates from the *eldercare* sf data frames.  
 
 ```{r}
 eldercare_coord <- st_coordinates(eldercare)
-hexagon_coord <- st_coordinates(hexagon)
 ```
 
-The code chunk below will be used to compute the distance matrix. 
+However, hexagon sf data frame is in polygon feature st_centroid() will be used to compute the centroid of each hexagon.  Then, st_coordinate() will be used to extract the coordinates from the newly derived centroid points.
+
+```{r}
+hexagon_coord <- st_centroid(hexagon) %>%
+  st_coordinates()
+```
+
+The code chunk below will be used to compute the distance matrix.
 
 ```{r}
 EucMatrix <- SpatialAcc::distance(hexagon_coord,
@@ -464,4 +470,3 @@ ggplot(data=hexagon_SAM,
              colour ="red", 
              size=2)
 ```
-
