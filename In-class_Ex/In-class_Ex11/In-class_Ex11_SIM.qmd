@@ -463,7 +463,41 @@ In this section, you will learn how to calibrate Spatial Interaction Models by u
 Firstly, let us import the modelling data by using the code chunk below.
 
 ```{r}
-SIM_data <- read_rds("data/rds/SIM_data")
+SIM_data <- read_rds("data/rds/SIM_data.rds")
+```
+
+### Visualising the dependent variable
+
+Firstly, let us plot the distribution of the dependent variable (i.e. TRIPS) by using histogram method by using the code chunk below.
+
+```{r}
+ggplot(data = SIM_data,
+       aes(x = TRIPS)) +
+  geom_histogram()
+```
+
+Notice that the distribution is highly skewed and not resemble bell shape or also known as normal distribution.
+
+Next, let us visualise the relation between the dependent variable and one of the key independent variable in Spatial Interaction Model, namely distance.
+
+```{r}
+ggplot(data = SIM_data,
+       aes(x = dist,
+           y = TRIPS)) +
+  geom_point() +
+  geom_smooth(method = lm)
+```
+
+Notice that their relationship hardly resemble linear relationship.
+
+On the other hand, if we plot the scatter plot by using the log transformed version of both variables, we can see that their relationship is more resemble linear relationship. 
+
+```{r}
+ggplot(data = SIM_data,
+       aes(x = log(dist),
+           y = log(TRIPS))) +
+  geom_point() +
+  geom_smooth(method = lm)
 ```
 
 ### Checking for variables with zero values
@@ -476,7 +510,7 @@ In the code chunk below, summary() of Base R is used to compute the summary stat
 summary(SIM_data)
 ```
 
-The print report above reveals that variables ORIGIN_AGE7_12, ORIGIN_AGE13_24,  ORIGIN_AGE25_64,DESTIN_AGE7_12, DESTIN_AGE13_24, DESTIN_AGE25_64 consist of 0 values.
+The print report above reveals that variables ORIGIN_AGE7_12, ORIGIN_AGE13_24, ORIGIN_AGE25_64,DESTIN_AGE7_12, DESTIN_AGE13_24, DESTIN_AGE25_64 consist of 0 values.
 
 In view of this, code chunk below will be used to replace zero values to 0.99.
 
@@ -514,10 +548,17 @@ Notice that all the 0 values have been replaced by 0.99.
 
 In this section, you will learn how to calibrate an unconstrained spatial interaction model by using `glm()` of Base Stats. The explanatory variables are origin population by different age cohort, destination population by different age cohort (i.e. wj3_destmedinc) and distance between origin and destination in km (i.e. dist).
 
+The general formula of Unconstrained Spatial Interaction Model
+
+![](img/image1.jpg)
+
 The code chunk used to calibrate to model is shown below:
 
 ```{r}
-uncSIM <- glm(formula = TRIPS ~ log(dist),
+uncSIM <- glm(formula = TRIPS ~ 
+                log(ORIGIN_AGE25_64) + 
+                log(DESTIN_AGE25_64) +
+                log(dist),
               family = poisson(link = "log"),
               data = SIM_data,
               na.action = na.exclude)
@@ -526,7 +567,7 @@ uncSIM
 
 ### R-squared function
 
-In order to measure how much variation of the trips can be accounted by the model we will write a function to calculate R-Squared value as shown below. 
+In order to measure how much variation of the trips can be accounted by the model we will write a function to calculate R-Squared value as shown below.
 
 ```{r}
 CalcRSquared <- function(observed,estimated){
@@ -550,59 +591,36 @@ r2_mcfadden(uncSIM)
 
 In this section, we will fit an origin constrained SIM by using the code3 chunk below.
 
+The general formula of Origin Constrained Spatial Interaction Model
+
+![](img/image2.jpg)
+
 
 ```{r}
-orcSIM0 <- glm(formula = TRIPS ~ ORIGIN_SZ +
+orcSIM <- glm(formula = TRIPS ~ 
+                 ORIGIN_SZ +
+                 log(DESTIN_AGE25_64) +
                  log(dist),
-              family = poisson(link = "log"),
-              data = SIM_data,
-              na.action = na.exclude)
-summary(orcSIM0)
-```
-
-We can examine how the constraints hold for destinations this time.
-
-```{r}
-CalcRSquared(orcSIM0$data$TRIPS, orcSIM0$fitted.values)
-```
-
-
-```{r}
-orcSIM <- glm(formula = TRIPS ~ ORIGIN_SZ +
-                log(DESTIN_AGE25_64) + log(dist),
               family = poisson(link = "log"),
               data = SIM_data,
               na.action = na.exclude)
 summary(orcSIM)
 ```
 
+We can examine how the constraints hold for destinations this time.
+
 ```{r}
 CalcRSquared(orcSIM$data$TRIPS, orcSIM$fitted.values)
 ```
 
-What about adding new variables?
+### Destination constrained
 
-```{r}
-orcSIM2 <- glm(formula = TRIPS ~ ORIGIN_SZ + 
-                    DESTIN_AGE7_12 + 
-                    DESTIN_AGE13_24 +
-                    DESTIN_AGE25_64 +
-                    log(dist),
-              family = poisson(link = "log"),
-              data = SIM_data,
-              na.action = na.exclude)
-summary(orcSIM2)
-```
+In this section, we will fit a destination constrained SIM by using the code chunk below.
 
-We can examine how the constraints hold for destinations this time.
+The general formula of Destination Constrained Spatial Interaction Model
 
-```{r}
-CalcRSquared(orcSIM2$data$TRIPS, orcSIM2$fitted.values)
-```
+![](img/image3.jpg)
 
-### Destination constrained 
-
-In this section, we will fit a destination constrained SIM by using the code3 chunk below.
 
 ```{r}
 decSIM <- glm(formula = TRIPS ~ 
@@ -621,10 +639,13 @@ We can examine how the constraints hold for destinations this time.
 CalcRSquared(decSIM$data$TRIPS, decSIM$fitted.values)
 ```
 
-
-### Doubly constrained 
+### Doubly constrained
 
 In this section, we will fit a doubly constrained SIM by using the code chunk below.
+
+The general formula of Doubly Constrained Spatial Interaction Model
+
+![](img/image4.jpg)
 
 ```{r}
 dbcSIM <- glm(formula = TRIPS ~ 
@@ -643,11 +664,11 @@ We can examine how the constraints hold for destinations this time.
 CalcRSquared(dbcSIM$data$TRIPS, dbcSIM$fitted.values)
 ```
 
-Notice that there is a relatively greater improvement in the R^2 value. 
+Notice that there is a relatively greater improvement in the R\^2 value.
 
 ### Model comparison
 
-Another useful model performance measure for continuous dependent variable is [Root Mean Squared Error](https://towardsdatascience.com/what-does-rmse-really-mean-806b65f2e48e). In this sub-section, you will learn how to use [`compare_performance()`](https://easystats.github.io/performance/reference/compare_performance.html) of [**performance**](https://easystats.github.io/performance/index.html) package 
+Another useful model performance measure for continuous dependent variable is [Root Mean Squared Error](https://towardsdatascience.com/what-does-rmse-really-mean-806b65f2e48e). In this sub-section, you will learn how to use [`compare_performance()`](https://easystats.github.io/performance/reference/compare_performance.html) of [**performance**](https://easystats.github.io/performance/index.html) package
 
 First of all, let us create a list called *model_list* by using the code chun below.
 
@@ -671,7 +692,7 @@ The print above reveals that doubly constrained SIM is the best model among all 
 
 In this section, you will learn how to visualise the observed values and the fitted values.
 
-Firstly we will extract the fitted values from each model by using the code chunk below. 
+Firstly we will extract the fitted values from each model by using the code chunk below.
 
 ```{r}
 df <- as.data.frame(uncSIM$fitted.values) %>%
