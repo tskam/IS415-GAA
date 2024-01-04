@@ -1,6 +1,6 @@
 ---
 title: "In-class Exercise 11: Calibrating Spatial Interaction Models (SIM) with R"
-format: html
+format: docx
 execute: 
   echo: true
   eval: true
