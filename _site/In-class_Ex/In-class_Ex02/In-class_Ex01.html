@@ -229,13 +229,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#extracting-trip-ending-locations" id="toc-extracting-trip-ending-locations" class="nav-link" data-scroll-target="#extracting-trip-ending-locations">Extracting trip ending locations</a></li>
   <li><a href="#visualising-frequency-distribution" id="toc-visualising-frequency-distribution" class="nav-link" data-scroll-target="#visualising-frequency-distribution">Visualising frequency distribution</a></li>
   </ul></li>
-  <li><a href="#converting-into-sf-tibble-data.frame" id="toc-converting-into-sf-tibble-data.frame" class="nav-link" data-scroll-target="#converting-into-sf-tibble-data.frame">Converting into sf tibble data.frame</a></li>
-  <li><a href="#visualising-as-point-symbol-map" id="toc-visualising-as-point-symbol-map" class="nav-link" data-scroll-target="#visualising-as-point-symbol-map">Visualising as Point Symbol Map</a></li>
-  <li><a href="#importing-master-plan-2019-planning-subzone-boundary" id="toc-importing-master-plan-2019-planning-subzone-boundary" class="nav-link" data-scroll-target="#importing-master-plan-2019-planning-subzone-boundary">Importing Master Plan 2019 Planning Subzone Boundary</a>
-  <ul class="collapse">
-  <li><a href="#diy-7" id="toc-diy-7" class="nav-link" data-scroll-target="#diy-7">DIY</a></li>
-  <li><a href="#diy-8" id="toc-diy-8" class="nav-link" data-scroll-target="#diy-8">DIY</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -271,11 +264,7 @@ DIY
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Using the step you learned in previous lesson,</p>
-<ul>
-<li><p>create a folder called In-class_Ex02.</p></li>
-<li><p>create a new Quarto document called In-class_Ex02.</p></li>
-</ul>
+<p>Using the step you learned in previous lesson, - create a folder called In-class_Ex02. - create a new Quarto document called In-class_Ex02.</p>
 </div>
 </div>
 <p>In this hands-on exercise, the following R packages will be used.</p>
@@ -283,8 +272,7 @@ DIY
 <li>arrow,</li>
 <li>lubridate,</li>
 <li>tidyverse,</li>
-<li>tmap,</li>
-<li>sf.</li>
+<li>sf</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -302,7 +290,7 @@ DIY
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(arrow, lubridate, tidyverse, sf, tmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(arrow, lubridate, tidyverse, sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -320,11 +308,8 @@ DIY
 <div class="callout-body-container callout-body">
 <ul>
 <li>Create a folder called <em>data</em> in <em>In-class_Ex02</em> folder.</li>
-<li>Create a sub-folder called <em>GrabPosisi</em>.</li>
-<li>Download, if you have yet to do so in previous lesson, Copy-and-Paste the downloaded data file into the newly created <em>GrabPosisi</em>.<br>
-</li>
-<li>Write a code chunk to import <em>part-00000-8bbff892-97d2-4011-9961-703e38972569.c000.snappy.parquet</em> by using appropriate function of <a href="https://arrow.apache.org/docs/r/index.html"><strong>arrow</strong></a> package into R. Call the file <em>df</em>.</li>
 </ul>
+<p>Write a code chunk to load the R packages into R environment.</p>
 </div>
 </div>
 <div class="cell">
@@ -340,68 +325,24 @@ DIY
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_1<span class="sc">$</span>pingtimestamp <span class="ot">&lt;-</span> <span class="fu">as_datetime</span>(df_1<span class="sc">$</span>pingtimestamp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-DIY
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Write a code chunk to convert the data type of <em>pingtimestamp</em> from character to date-time.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>pingtimestamp <span class="ot">&lt;-</span> <span class="fu">as_datetime</span>(df<span class="sc">$</span>pingtimestamp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(df, <span class="st">"data/rds/part0.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-DIY
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Write a code chunk to save the reformatted df into a new rds file called <em>part0.rds</em>. Save the output into a sub-folder call <em>rds</em>.</p>
-</div>
-</div>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(df, <span class="st">"data/rds/part0.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>pingtimestamp <span class="ot">&lt;-</span> <span class="fu">as_datetime</span>(df<span class="sc">$</span>pingtimestamp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="extracting-trip-starting-locations" class="level3">
 <h3 class="anchored" data-anchor-id="extracting-trip-starting-locations">Extracting trip starting locations</h3>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-DIY
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Using the step you learned in previous lesson,</p>
-<ul>
-<li>extracting trips’ origin locations.</li>
-<li>derive three new columns (i.e.&nbsp;variables) for weekday, starting hour and day of the month.</li>
-<li>name the output tibble data.frame <em>origin_df</em>.</li>
-</ul>
-</div>
-</div>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>origin_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_start <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(trj_id) <span class="sc">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(pingtimestamp) <span class="sc">%&gt;%</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>()<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
@@ -415,31 +356,13 @@ DIY
 </section>
 <section id="extracting-trip-ending-locations" class="level3">
 <h3 class="anchored" data-anchor-id="extracting-trip-ending-locations">Extracting trip ending locations</h3>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-DIY
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Write a code chunk to extract trips’ destination locations. Similarly, derive the weekday, ending hour and day of the month columns.</p>
-</div>
-</div>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>destination_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_end <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(trj_id) <span class="sc">%&gt;%</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(pingtimestamp)) <span class="sc">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>()<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekday =</span> <span class="fu">wday</span>(pingtimestamp,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label=</span><span class="cn">TRUE</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">abbr=</span><span class="cn">TRUE</span>),</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">end_hr =</span> <span class="fu">factor</span>(<span class="fu">hour</span>(pingtimestamp)),</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">day =</span> <span class="fu">factor</span>(<span class="fu">mday</span>(pingtimestamp)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>()<span class="sc">==</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -448,84 +371,17 @@ DIY
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>origin_df, </span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>df_start, </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>weekday)) <span class="sc">+</span> </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="In-class_Ex02_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
-</section>
-<section id="converting-into-sf-tibble-data.frame" class="level2">
-<h2 class="anchored" data-anchor-id="converting-into-sf-tibble-data.frame">Converting into sf tibble data.frame</h2>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>origin_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(origin_df,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"rawlng"</span>, <span class="st">"rawlat"</span>),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-</section>
-<section id="visualising-as-point-symbol-map" class="level2">
-<h2 class="anchored" data-anchor-id="visualising-as-point-symbol-map">Visualising as Point Symbol Map</h2>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(origin_sf) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="In-class_Ex02_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
-<section id="importing-master-plan-2019-planning-subzone-boundary" class="level2">
-<h2 class="anchored" data-anchor-id="importing-master-plan-2019-planning-subzone-boundary">Importing Master Plan 2019 Planning Subzone Boundary</h2>
-<section id="diy-7" class="level3 callout-info">
-<h3 class="anchored" data-anchor-id="diy-7">DIY</h3>
-<p>Using the step your learned from previous lesson, import Master Plan 2019 Subzone downloaded from data.Gov as sf tibble data.frame. Call the output <em>mpsz2019</em>.</p>
-</section>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mpsz2019 <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/dataGov/MPSZ2019.kml"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `URA_MP19_SUBZONE_NO_SEA_PL' from data source 
-  `D:\tskam\IS415-GAA\In-class_Ex\In-class_Ex02\data\dataGov\MPSZ2019.kml' 
-  using driver `KML'
-Simple feature collection with 332 features and 2 fields
-Geometry type: MULTIPOLYGON
-Dimension:     XY, XYZ
-Bounding box:  xmin: 103.6057 ymin: 1.158699 xmax: 104.0885 ymax: 1.470775
-z_range:       zmin: 0 zmax: 0
-Geodetic CRS:  WGS 84</code></pre>
-</div>
-</div>
-<section id="diy-8" class="level3 callout-info">
-<h3 class="anchored" data-anchor-id="diy-8">DIY</h3>
-<p>Using the step your learned, plot a point symbol map look similar to the figure below.</p>
-</section>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz2019) <span class="sc">+</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(origin_sf) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="In-class_Ex02_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<p><img src="In-class_Ex01_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -23,16 +23,16 @@
   {
     "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html",
     "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html",
-    "title": "In-class Exercise 2: Geospatial Data Wrangling",
+    "title": "R for Geospatial Data Sceince",
     "section": "",
-    "text": "Water is an important resource to mankind. Clean and accessible water is critical to human health. It provides a healthy environment, a sustainable economy, reduces poverty and ensures peace and security. Yet over 40% of the global population does not have access to sufficient clean water. By 2025, 1.8 billion people will be living in countries or regions with absolute water scarcity, according to UN-Water. The lack of water poses a major threat to several sectors, including food security. Agriculture uses about 70% of the world’s accessible freshwater.\nDeveloping countries are most affected by water shortages and poor water quality. Up to 80% of illnesses in the developing world are linked to inadequate water and sanitation. Despite technological advancement, providing clean water to the rural community is still a major development issues in many countries globally, especially countries in the Africa continent.\nTo address the issue of providing clean and sustainable water supply to the rural community, a global Water Point Data Exchange (WPdx) project has been initiated. The main aim of this initiative is to collect water point related data from rural areas at the water point or small water scheme level and share the data via WPdx Data Repository, a cloud-based data library. What is so special of this project is that data are collected based on WPDx Data Standard.\n\n\n\nGeospatial analytics hold tremendous potential to address complex problems facing society. In this study, you are tasked to apply appropriate geospatial data wrangling methods to prepare the data for water point mapping study. For the purpose of this study, Nigeria will be used as the study country.\n\n\n\n\n\nFor the purpose of this assignment, data from WPdx Global Data Repositories will be used. There are two versions of the data. They are: WPdx-Basic and WPdx+. You are required to use WPdx+ data set.\n\n\n\nNigeria Level-2 Administrative Boundary (also known as Local Government Area) polygon features GIS data will be used in this take-home exercise. The data can be downloaded either from The Humanitarian Data Exchange portal or geoBoundaries.\n\n\n\n\nThe specific tasks of this take-home exercise are as follows:\n\nUsing appropriate sf method, import the shapefile into R and save it in a simple feature data frame format. Note that there are three Projected Coordinate Systems of Nigeria, they are: EPSG: 26391, 26392, and 26303. You can use any one of them.\nUsing appropriate tidyr and dplyr methods, derive the number of functional and non-functional water points at LGA level.\nCombining the geospatial and aspatial data frame into simple feature data frame.\nVisualising the distribution of water point by using appropriate statistical methods."
+    "text": "DIY\n\n\n\nUsing the step you learned in previous lesson,\n\ncreate a folder called In-class_Ex02.\ncreate a new Quarto document called In-class_Ex02.\n\n\n\nIn this hands-on exercise, the following R packages will be used.\n\narrow,\nlubridate,\ntidyverse,\ntmap,\nsf.\n\n\n\n\n\n\n\nDIY\n\n\n\nWrite a code chunk to load the R packages into R environment.\n\n\n\n\nCode\npacman::p_load(arrow, lubridate, tidyverse, sf, tmap)"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#getting-started",
     "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#getting-started",
-    "title": "In-class Exercise 2: Geospatial Data Wrangling",
-    "section": "2 Getting started",
-    "text": "2 Getting started\nFor the purpose of this in-class exercise, three R packages will be used. They are: sf, tidyverse and funModeling.\n\n\n\n\n\n\nYour turn\n\n\n\nUsing the step you had learned, check if these three R packages have been installed in you laptop, if not install the missing R packages. If Yes, launch the R packages into R environment\n\n\n\n\n\nShow the code\npacman::p_load(sf, tidyverse, funModeling)"
+    "title": "R for Geospatial Data Sceince",
+    "section": "",
+    "text": "DIY\n\n\n\nUsing the step you learned in previous lesson,\n\ncreate a folder called In-class_Ex02.\ncreate a new Quarto document called In-class_Ex02.\n\n\n\nIn this hands-on exercise, the following R packages will be used.\n\narrow,\nlubridate,\ntidyverse,\ntmap,\nsf.\n\n\n\n\n\n\n\nDIY\n\n\n\nWrite a code chunk to load the R packages into R environment.\n\n\n\n\nCode\npacman::p_load(arrow, lubridate, tidyverse, sf, tmap)"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#handling-geospatial-data",
@@ -768,5 +768,61 @@
     "title": "In-class Exercise 11: Calibrating Spatial Interaction Models (SIM) with R",
     "section": "Preparing Origin and Destination Attributes",
     "text": "Preparing Origin and Destination Attributes\n\nImporting population data\n\npop <- read_csv(\"data/aspatial/pop.csv\")\n\n\n\nGeospatial data wrangling\n\npop <- pop %>%\n  left_join(mpsz,\n            by = c(\"PA\" = \"PLN_AREA_N\",\n                   \"SZ\" = \"SUBZONE_N\")) %>%\n  select(1:6) %>%\n  rename(SZ_NAME = SZ,\n         SZ = SUBZONE_C)\n\n\n\nPreparing origin attribute\n\nflow_data1 <- flow_data1 %>%\n  left_join(pop,\n            by = c(ORIGIN_SZ = \"SZ\")) %>%\n  rename(ORIGIN_AGE7_12 = AGE7_12,\n         ORIGIN_AGE13_24 = AGE13_24,\n         ORIGIN_AGE25_64 = AGE25_64) %>%\n  select(-c(PA, SZ_NAME))\n\n\n\nPreparing destination attribute\n\nflow_data1 <- flow_data1 %>%\n  left_join(pop,\n            by = c(DESTIN_SZ = \"SZ\")) %>%\n  rename(DESTIN_AGE7_12 = AGE7_12,\n         DESTIN_AGE13_24 = AGE13_24,\n         DESTIN_AGE25_64 = AGE25_64) %>%\n  select(-c(PA, SZ_NAME))\n\n\nwrite_rds(flow_data1, \"data/rds/SIM_data\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex01.html",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex01.html",
+    "title": "R for Geospatial Data Sceince",
+    "section": "",
+    "text": "DIY\n\n\n\nUsing the step you learned in previous lesson, - create a folder called In-class_Ex02. - create a new Quarto document called In-class_Ex02.\n\n\nIn this hands-on exercise, the following R packages will be used.\n\narrow,\nlubridate,\ntidyverse,\nsf\n\n\n\n\n\n\n\nDIY\n\n\n\nWrite a code chunk to load the R packages into R environment.\n\n\n\n\nCode\npacman::p_load(arrow, lubridate, tidyverse, sf)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex01.html#getting-started",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex01.html#getting-started",
+    "title": "R for Geospatial Data Sceince",
+    "section": "",
+    "text": "DIY\n\n\n\nUsing the step you learned in previous lesson, - create a folder called In-class_Ex02. - create a new Quarto document called In-class_Ex02.\n\n\nIn this hands-on exercise, the following R packages will be used.\n\narrow,\nlubridate,\ntidyverse,\nsf\n\n\n\n\n\n\n\nDIY\n\n\n\nWrite a code chunk to load the R packages into R environment.\n\n\n\n\nCode\npacman::p_load(arrow, lubridate, tidyverse, sf)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex01.html#importing-grabposisi-dataset",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex01.html#importing-grabposisi-dataset",
+    "title": "R for Geospatial Data Sceince",
+    "section": "Importing GrabPosisi Dataset",
+    "text": "Importing GrabPosisi Dataset\n\n\nCode\ndf &lt;- read_parquet(\"data/GrabPosisi/part-00000.parquet\")\n\n\n\n\nCode\ndf_1 &lt;- read_parquet(\"data/GrabPosisi/part-00000.parquet\")\ndf_1$pingtimestamp &lt;- as_datetime(df_1$pingtimestamp)\n\n\n\n\nCode\nwrite_rds(df, \"data/rds/part0.rds\")\n\n\n\n\nCode\ndf$pingtimestamp &lt;- as_datetime(df$pingtimestamp)\n\n\n\nExtracting trip starting locations\n\n\nCode\ndf_start &lt;- df %&gt;%\n  group_by(trj_id) %&gt;%\n  arrange(pingtimestamp) %&gt;%\n  filter(row_number()==1) %&gt;%\n  mutate(weekday = wday(pingtimestamp,\n                        label=TRUE,\n                        abbr=TRUE),\n         start_hr = factor(hour(pingtimestamp)),\n         day = factor(mday(pingtimestamp)))\n\n\n\n\nExtracting trip ending locations\n\n\nCode\ndf_end &lt;- df %&gt;%\n  group_by(trj_id) %&gt;%\n  arrange(desc(pingtimestamp)) %&gt;%\n  filter(row_number()==1)\n\n\n\n\nVisualising frequency distribution\n\n\nCode\nggplot(data=df_start, \n       aes(x=weekday)) + \n  geom_bar()"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex01.html#importing-grab-posisi-dataset",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex01.html#importing-grab-posisi-dataset",
+    "title": "R for Geospatial Data Sceince",
+    "section": "Importing Grab-Posisi Dataset",
+    "text": "Importing Grab-Posisi Dataset\n\n\n\n\n\n\nDIY\n\n\n\n\nCreate a folder called data in In-class_Ex02 folder.\n\nWrite a code chunk to load the R packages into R environment.\n\n\n\n\nCode\ndf &lt;- read_parquet(\"data/GrabPosisi/part-00000.parquet\")\n\n\n\n\nCode\ndf_1 &lt;- read_parquet(\"data/GrabPosisi/part-00000.parquet\")\ndf_1$pingtimestamp &lt;- as_datetime(df_1$pingtimestamp)\n\n\n\n\nCode\nwrite_rds(df, \"data/rds/part0.rds\")\n\n\n\n\nCode\ndf$pingtimestamp &lt;- as_datetime(df$pingtimestamp)\n\n\n\nExtracting trip starting locations\n\n\nCode\ndf_start &lt;- df %&gt;%\n  group_by(trj_id) %&gt;%\n  arrange(pingtimestamp) %&gt;%\n  filter(row_number()==1) %&gt;%\n  mutate(weekday = wday(pingtimestamp,\n                        label=TRUE,\n                        abbr=TRUE),\n         start_hr = factor(hour(pingtimestamp)),\n         day = factor(mday(pingtimestamp)))\n\n\n\n\nExtracting trip ending locations\n\n\nCode\ndf_end &lt;- df %&gt;%\n  group_by(trj_id) %&gt;%\n  arrange(desc(pingtimestamp)) %&gt;%\n  filter(row_number()==1)\n\n\n\n\nVisualising frequency distribution\n\n\nCode\nggplot(data=df_start, \n       aes(x=weekday)) + \n  geom_bar()"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-grab-posisi-dataset",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-grab-posisi-dataset",
+    "title": "R for Geospatial Data Sceince",
+    "section": "Importing Grab-Posisi Dataset",
+    "text": "Importing Grab-Posisi Dataset\n\n\n\n\n\n\nDIY\n\n\n\n\nCreate a folder called data in In-class_Ex02 folder.\nCreate a sub-folder called GrabPosisi.\nDownload, if you have yet to do so in previous lesson, Copy-and-Paste the downloaded data file into the newly created GrabPosisi.\n\nWrite a code chunk to import part-00000-8bbff892-97d2-4011-9961-703e38972569.c000.snappy.parquet by using appropriate function of arrow package into R. Call the file df.\n\n\n\n\n\nCode\ndf &lt;- read_parquet(\"data/GrabPosisi/part-00000.parquet\")\n\n\n\n\nCode\ndf_1 &lt;- read_parquet(\"data/GrabPosisi/part-00000.parquet\")\ndf_1$pingtimestamp &lt;- as_datetime(df_1$pingtimestamp)\n\n\n\n\n\n\n\n\nDIY\n\n\n\nWrite a code chunk to convert the data type of pingtimestamp from character to date-time.\n\n\nCode\ndf$pingtimestamp &lt;- as_datetime(df$pingtimestamp)\n\n\n\n\n\n\n\n\n\n\nDIY\n\n\n\nWrite a code chunk to save the reformatted df into a new rds file called part0.rds. Save the output into a sub-folder call rds.\n\n\n\n\nCode\nwrite_rds(df, \"data/rds/part0.rds\")\n\n\n\nExtracting trip starting locations\n\n\n\n\n\n\nDIY\n\n\n\nUsing the step you learned in previous lesson,\n\nextracting trips’ origin locations.\nderive three new columns (i.e. variables) for weekday, starting hour and day of the month.\nname the output tibble data.frame origin_df.\n\n\n\n\n\nCode\norigin_df &lt;- df %&gt;%\n  group_by(trj_id) %&gt;%\n  arrange(pingtimestamp) %&gt;%\n  filter(row_number()==1) %&gt;%\n  mutate(weekday = wday(pingtimestamp,\n                        label=TRUE,\n                        abbr=TRUE),\n         start_hr = factor(hour(pingtimestamp)),\n         day = factor(mday(pingtimestamp)))\n\n\n\n\nExtracting trip ending locations\n\n\n\n\n\n\nDIY\n\n\n\nWrite a code chunk to extract trips’ destination locations. Similarly, derive the weekday, ending hour and day of the month columns.\n\n\n\n\nCode\ndestination_df &lt;- df %&gt;%\n  group_by(trj_id) %&gt;%\n  arrange(desc(pingtimestamp)) %&gt;%\n  filter(row_number()==1) %&gt;%\n  mutate(weekday = wday(pingtimestamp,\n                        label=TRUE,\n                        abbr=TRUE),\n         end_hr = factor(hour(pingtimestamp)),\n         day = factor(mday(pingtimestamp)))\n\n\n\n\nVisualising frequency distribution\n\n\nCode\nggplot(data=origin_df, \n       aes(x=weekday)) + \n  geom_bar()"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#converting-into-sf-tibble-data.frame",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#converting-into-sf-tibble-data.frame",
+    "title": "R for Geospatial Data Sceince",
+    "section": "Converting into sf tibble data.frame",
+    "text": "Converting into sf tibble data.frame\n\n\nCode\norigin_sf &lt;- st_as_sf(origin_df,\n                      coords = c(\"rawlng\", \"rawlat\"),\n                      crs = 4326) %&gt;%\n  st_transform(crs = 3414)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#visualising-as-point-symbol-map",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#visualising-as-point-symbol-map",
+    "title": "R for Geospatial Data Sceince",
+    "section": "Visualising as Point Symbol Map",
+    "text": "Visualising as Point Symbol Map\n\n\nCode\ntmap_mode(\"plot\")\ntm_shape(origin_sf) +\n  tm_dots()"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-master-plan-2019-planning-subzone-boundary",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-master-plan-2019-planning-subzone-boundary",
+    "title": "R for Geospatial Data Sceince",
+    "section": "Importing Master Plan 2019 Planning Subzone Boundary",
+    "text": "Importing Master Plan 2019 Planning Subzone Boundary\n\nDIY\nUsing the step your learned from previous lesson, import Master Plan 2019 Subzone downloaded from data.Gov as sf tibble data.frame. Call the output mpsz2019.\n\n\n\nCode\nmpsz2019 &lt;- st_read(\"data/dataGov/MPSZ2019.kml\") %&gt;%\n  st_transform(crs = 3414)\n\n\nReading layer `URA_MP19_SUBZONE_NO_SEA_PL' from data source \n  `D:\\tskam\\IS415-GAA\\In-class_Ex\\In-class_Ex02\\data\\dataGov\\MPSZ2019.kml' \n  using driver `KML'\nSimple feature collection with 332 features and 2 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY, XYZ\nBounding box:  xmin: 103.6057 ymin: 1.158699 xmax: 104.0885 ymax: 1.470775\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84\n\n\n\nDIY\nUsing the step your learned, plot a point symbol map look similar to the figure below.\n\n\n\nCode\ntm_shape(mpsz2019) +\n  tm_polygons() +\ntm_shape(origin_sf) +\n  tm_dots()"
   }
 ]
