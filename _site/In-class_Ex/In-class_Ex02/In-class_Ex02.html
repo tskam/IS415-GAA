@@ -223,18 +223,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting Started</a></li>
-  <li><a href="#importing-grab-posisi-dataset" id="toc-importing-grab-posisi-dataset" class="nav-link" data-scroll-target="#importing-grab-posisi-dataset">Importing Grab-Posisi Dataset</a>
+  <li><a href="#importing-grab-posisi-dataset" id="toc-importing-grab-posisi-dataset" class="nav-link" data-scroll-target="#importing-grab-posisi-dataset">Importing Grab-Posisi Dataset</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data Preparation</a>
   <ul class="collapse">
+  <li><a href="#converting-data-type" id="toc-converting-data-type" class="nav-link" data-scroll-target="#converting-data-type">Converting data type</a></li>
   <li><a href="#extracting-trip-starting-locations" id="toc-extracting-trip-starting-locations" class="nav-link" data-scroll-target="#extracting-trip-starting-locations">Extracting trip starting locations</a></li>
   <li><a href="#extracting-trip-ending-locations" id="toc-extracting-trip-ending-locations" class="nav-link" data-scroll-target="#extracting-trip-ending-locations">Extracting trip ending locations</a></li>
-  <li><a href="#visualising-frequency-distribution" id="toc-visualising-frequency-distribution" class="nav-link" data-scroll-target="#visualising-frequency-distribution">Visualising frequency distribution</a></li>
   </ul></li>
-  <li><a href="#converting-into-sf-tibble-data.frame" id="toc-converting-into-sf-tibble-data.frame" class="nav-link" data-scroll-target="#converting-into-sf-tibble-data.frame">Converting into sf tibble data.frame</a></li>
-  <li><a href="#visualising-as-point-symbol-map" id="toc-visualising-as-point-symbol-map" class="nav-link" data-scroll-target="#visualising-as-point-symbol-map">Visualising as Point Symbol Map</a></li>
-  <li><a href="#importing-master-plan-2019-planning-subzone-boundary" id="toc-importing-master-plan-2019-planning-subzone-boundary" class="nav-link" data-scroll-target="#importing-master-plan-2019-planning-subzone-boundary">Importing Master Plan 2019 Planning Subzone Boundary</a>
+  <li><a href="#converting-aspatial-data-into-geospatial-data" id="toc-converting-aspatial-data-into-geospatial-data" class="nav-link" data-scroll-target="#converting-aspatial-data-into-geospatial-data">Converting aspatial data into geospatial data</a></li>
+  <li><a href="#visualising-the-data" id="toc-visualising-the-data" class="nav-link" data-scroll-target="#visualising-the-data">Visualising the data</a>
   <ul class="collapse">
-  <li><a href="#diy-7" id="toc-diy-7" class="nav-link" data-scroll-target="#diy-7">DIY</a></li>
+  <li><a href="#visualising-frequency-distribution" id="toc-visualising-frequency-distribution" class="nav-link" data-scroll-target="#visualising-frequency-distribution">Visualising frequency distribution</a></li>
+  <li><a href="#visualising-as-point-symbol-map" id="toc-visualising-as-point-symbol-map" class="nav-link" data-scroll-target="#visualising-as-point-symbol-map">Visualising as Point Symbol Map</a></li>
   <li><a href="#diy-8" id="toc-diy-8" class="nav-link" data-scroll-target="#diy-8">DIY</a></li>
+  <li><a href="#diy-9" id="toc-diy-9" class="nav-link" data-scroll-target="#diy-9">DIY</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -280,11 +282,11 @@ DIY
 </div>
 <p>In this hands-on exercise, the following R packages will be used.</p>
 <ul>
-<li>arrow,</li>
-<li>lubridate,</li>
-<li>tidyverse,</li>
-<li>tmap,</li>
-<li>sf.</li>
+<li><a href="https://arrow.apache.org/docs/r/">arrow</a> exposes an interface to the Arrow C++ library, enabling access to many of its features in R. For this in-class exercise, arrow will be used to read Parquet files into R environment.</li>
+<li><a href="https://lubridate.tidyverse.org/index.html">lubridate</a>, a member of tidyverse family. Lubridate makes it easier to do the things R does with date-times and possible to do the things R does not. If you are new to lubridate, the best place to start is the <a href="https://r4ds.hadley.nz/datetimes">Date and times</a> chapter in R for data science.</li>
+<li><a href="https://www.tidyverse.org/">tidyverse</a>, a family of R packages for doing Data Science work based on tidy framework,</li>
+<li><a href="https://r-tmap.github.io/tmap/index.html">tmap</a>, an R package specially designed for plotting cartographical quality maps based on Layered Gremmar of Graphics.</li>
+<li><a href="https://r-spatial.github.io/sf/">sf</a>, an package that provides simple features access for R.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -333,13 +335,49 @@ DIY
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(<span class="st">"data/GrabPosisi/part-00000.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Thing to learn from the code chunk above
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><a href="https://arrow.apache.org/docs/r/reference/read_parquet.html"><code>read_parquet()</code></a> of <strong>arrow</strong> package in used to read parquet format into R. By default, the output file is in tibble data.frame.<br>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="data-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation">Data Preparation</h2>
+<section id="converting-data-type" class="level3">
+<h3 class="anchored" data-anchor-id="converting-data-type">Converting data type</h3>
+<p>It is always a good practice to review the data type to ensure that they are in the correct data type format that meet you analysis need.</p>
+<p>In the code chunk below, <a href="https://dplyr.tidyverse.org/reference/glimpse.html"><code>glimpse()</code></a> of <strong>dplyr</strong> package is used to display the structure of df tibble data.frame.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_1 <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(<span class="st">"data/GrabPosisi/part-00000.parquet"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_1<span class="sc">$</span>pingtimestamp <span class="ot">&lt;-</span> <span class="fu">as_datetime</span>(df_1<span class="sc">$</span>pingtimestamp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 3,034,553
+Columns: 9
+$ trj_id        &lt;chr&gt; "70014", "73573", "75567", "1410", "4354", "32630", "646…
+$ driving_mode  &lt;chr&gt; "car", "car", "car", "car", "car", "car", "car", "car", …
+$ osname        &lt;chr&gt; "android", "android", "android", "android", "android", "…
+$ pingtimestamp &lt;int&gt; 1554943236, 1555582623, 1555141026, 1555731693, 15555844…
+$ rawlat        &lt;dbl&gt; 1.342326, 1.321781, 1.327088, 1.262482, 1.283799, 1.3003…
+$ rawlng        &lt;dbl&gt; 103.8890, 103.8564, 103.8613, 103.8238, 103.8072, 103.90…
+$ speed         &lt;dbl&gt; 18.910000, 17.719076, 14.021548, 13.026521, 14.812943, 2…
+$ bearing       &lt;int&gt; 248, 44, 34, 181, 93, 73, 82, 321, 324, 31, 203, 50, 252…
+$ accuracy      &lt;dbl&gt; 3.900, 4.000, 3.900, 4.000, 3.900, 3.900, 3.000, 3.649, …</code></pre>
 </div>
+</div>
+<p>Notice that <em>pingtimestamp</em> is in wrong data type format. It should be in date/time format and not integer.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -354,11 +392,27 @@ DIY
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>pingtimestamp <span class="ot">&lt;-</span> <span class="fu">as_datetime</span>(df<span class="sc">$</span>pingtimestamp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>pingtimestamp <span class="ot">&lt;-</span> <span class="fu">as_datetime</span>(df<span class="sc">$</span>pingtimestamp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Thing to learn from the code chunk above
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><a href="https://lubridate.tidyverse.org/reference/as_date.html"><code>as_datatime</code></a> of lubridate package is used to convert <em>pingtimestamp</em> from integer to data-time data type.</li>
+</ul>
+</div>
+</div>
+<p>Before moving on to the next step, it is advisable to save the tidy data.frame into rds format for subsequent use. RDS (R Data Serialization) files are a common format for saving R objects in RStudio, and they allow you to preserve the state of an object between R sessions. Saving your R object as an RDS file in R can be useful for sharing your work with others, replicating your analysis, or simply storing your work for later use.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -375,9 +429,10 @@ DIY
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(df, <span class="st">"data/rds/part0.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(df, <span class="st">"data/rds/part0.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section>
 <section id="extracting-trip-starting-locations" class="level3">
 <h3 class="anchored" data-anchor-id="extracting-trip-starting-locations">Extracting trip starting locations</h3>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -401,16 +456,38 @@ DIY
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>origin_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(trj_id) <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(pingtimestamp) <span class="sc">%&gt;%</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>()<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekday =</span> <span class="fu">wday</span>(pingtimestamp,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label=</span><span class="cn">TRUE</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">abbr=</span><span class="cn">TRUE</span>),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">start_hr =</span> <span class="fu">factor</span>(<span class="fu">hour</span>(pingtimestamp)),</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">day =</span> <span class="fu">factor</span>(<span class="fu">mday</span>(pingtimestamp)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>origin_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(trj_id) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(pingtimestamp) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>()<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekday =</span> <span class="fu">wday</span>(pingtimestamp,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label=</span><span class="cn">TRUE</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">abbr=</span><span class="cn">TRUE</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">start_hr =</span> <span class="fu">factor</span>(<span class="fu">hour</span>(pingtimestamp)),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">day =</span> <span class="fu">factor</span>(<span class="fu">mday</span>(pingtimestamp)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Things to learn from the code chunk above
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><a href="https://dplyr.tidyverse.org/reference/group_by.html"><code>group_by()</code></a> of <strong>dplyr</strong> is used to group the records according to the values of <em>trj_id</em>.</li>
+<li><a href="https://dplyr.tidyverse.org/reference/arrange.html"><code>arrange()</code></a> of <strong>dplyr</strong> package is used to sort the rows of a data frame by the values of selected column(s). By default, the records will be sorted ascendingly.</li>
+<li><a href="https://dplyr.tidyverse.org/reference/filter.html"><code>filter()</code></a> of dplyr is used to retaining all rows that meet the selection criteria (row_number()==1).</li>
+<li><a href="https://dplyr.tidyverse.org/reference/mutate.html"><code>mutate()</code></a> of dplyr is used to derive new fields by using functions.</li>
+<li><a href="https://lubridate.tidyverse.org/reference/day.html"><code>wday()</code></a> of lubridate package to return the day of the week. By default, a full character of the day (i.e.&nbsp;Sunday) will be returned. The argument of <em>abbr=TRUE</em> will be used to return the abbreviation (i.e.&nbsp;Sun).<br>
+</li>
+<li><a href="https://lubridate.tidyverse.org/reference/hour.html"><code>hour()</code></a> returns hour of the day.</li>
+<li><a href="https://lubridate.tidyverse.org/reference/day.html"><code>mday()</code></a> returns the day of the month.</li>
+</ul>
+</div>
 </div>
 </section>
 <section id="extracting-trip-ending-locations" class="level3">
@@ -431,70 +508,151 @@ DIY
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>destination_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(trj_id) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(pingtimestamp)) <span class="sc">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>()<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekday =</span> <span class="fu">wday</span>(pingtimestamp,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label=</span><span class="cn">TRUE</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">abbr=</span><span class="cn">TRUE</span>),</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">end_hr =</span> <span class="fu">factor</span>(<span class="fu">hour</span>(pingtimestamp)),</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">day =</span> <span class="fu">factor</span>(<span class="fu">mday</span>(pingtimestamp)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>destination_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(trj_id) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(pingtimestamp)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>()<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekday =</span> <span class="fu">wday</span>(pingtimestamp,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label=</span><span class="cn">TRUE</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">abbr=</span><span class="cn">TRUE</span>),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">end_hr =</span> <span class="fu">factor</span>(<span class="fu">hour</span>(pingtimestamp)),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">day =</span> <span class="fu">factor</span>(<span class="fu">mday</span>(pingtimestamp)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Thing to learn from the code chunk above
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>arrange(desc(pingtimestamp)) is used to sort the values in <em>pingtimestamp</em> field descendingly. This is necessary in order to retain the destination locations.</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When you are happy with the quality of the tidied data, remember to save them for future used.</p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(origin_df, <span class="st">"data/rds/origin_df.rds"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(destination_df, <span class="st">"data/rds/destination_df.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>If necessary, the code chunk below will be used to import the data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>origin_df <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/origin_df.rds"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>destination_df <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/destination_df.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
+</section>
+<section id="converting-aspatial-data-into-geospatial-data" class="level2">
+<h2 class="anchored" data-anchor-id="converting-aspatial-data-into-geospatial-data">Converting aspatial data into geospatial data</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+DIY
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Convert <em>origin_df</em> into an sf tibble data.frame by using it’s location information.</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>origin_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(origin_df,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"rawlng"</span>, <span class="st">"rawlat"</span>),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Things to learn from the code chunk above</p>
+<ul>
+<li><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html"><code>st_as_sf()</code></a> of sf package is used to convert the tibble data.frame into sf tibble data.frame.</li>
+<li><em>coords</em> argument is used to specify the longitude and latitude fields. It is important to note that it should start with longitude then follows by latitude.</li>
+<li><em>crs</em> argument must be used to specify the source coordinate system.</li>
+<li><a href="https://r-spatial.github.io/sf/reference/st_transform.html"><code>st_transform()</code></a> is used to transform from into a new coordinates system.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="visualising-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="visualising-the-data">Visualising the data</h2>
+<p>After data preparation, it is always a good practice to visualise the data by using appropriate EDA or map visualisation methods.</p>
 <section id="visualising-frequency-distribution" class="level3">
 <h3 class="anchored" data-anchor-id="visualising-frequency-distribution">Visualising frequency distribution</h3>
+<p>In the code chunk below, ggplot functions are used to reveal the distribution of origin trips by day of the week.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>origin_df, </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>weekday)) <span class="sc">+</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>origin_df, </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>weekday)) <span class="sc">+</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="In-class_Ex02_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<p><img src="In-class_Ex02_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
-</section>
-<section id="converting-into-sf-tibble-data.frame" class="level2">
-<h2 class="anchored" data-anchor-id="converting-into-sf-tibble-data.frame">Converting into sf tibble data.frame</h2>
+<section id="visualising-as-point-symbol-map" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-as-point-symbol-map">Visualising as Point Symbol Map</h3>
+<p>In the code chunk below, tmap functions are used to plot a point symbol map by using the origin trips locations.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>origin_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(origin_df,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"rawlng"</span>, <span class="st">"rawlat"</span>),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-</section>
-<section id="visualising-as-point-symbol-map" class="level2">
-<h2 class="anchored" data-anchor-id="visualising-as-point-symbol-map">Visualising as Point Symbol Map</h2>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(origin_sf) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(origin_sf) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="In-class_Ex02_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<p><img src="In-class_Ex02_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>It is always useful for us to provide the map data a context.</p>
 </section>
-<section id="importing-master-plan-2019-planning-subzone-boundary" class="level2">
-<h2 class="anchored" data-anchor-id="importing-master-plan-2019-planning-subzone-boundary">Importing Master Plan 2019 Planning Subzone Boundary</h2>
-<section id="diy-7" class="level3 callout-info">
-<h3 class="anchored" data-anchor-id="diy-7">DIY</h3>
+<section id="diy-8" class="level3 callout-info">
+<h3 class="anchored" data-anchor-id="diy-8">DIY</h3>
 <p>Using the step your learned from previous lesson, import Master Plan 2019 Subzone downloaded from data.Gov as sf tibble data.frame. Call the output <em>mpsz2019</em>.</p>
 </section>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mpsz2019 <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/dataGov/MPSZ2019.kml"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mpsz2019 <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/dataGov/MPSZ2019.kml"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `URA_MP19_SUBZONE_NO_SEA_PL' from data source 
@@ -508,20 +666,36 @@ z_range:       zmin: 0 zmax: 0
 Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
-<section id="diy-8" class="level3 callout-info">
-<h3 class="anchored" data-anchor-id="diy-8">DIY</h3>
+<section id="diy-9" class="level3 callout-info">
+<h3 class="anchored" data-anchor-id="diy-9">DIY</h3>
 <p>Using the step your learned, plot a point symbol map look similar to the figure below.</p>
 </section>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz2019) <span class="sc">+</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(origin_sf) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz2019) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(origin_sf) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="In-class_Ex02_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<p><img src="In-class_Ex02_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Thing to learn from the code chunk above</p>
+<ul>
+<li>For plotting multiple geospatial data layer. Polygon layer will be plotted first, then followed by line or point layer or else the point or line features will be covered by the polygon features.</li>
+</ul>
 </div>
 </div>
 
