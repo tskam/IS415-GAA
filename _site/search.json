@@ -950,5 +950,12 @@
     "title": "R for Geospatial Data Sceince",
     "section": "Visualising the data",
     "text": "Visualising the data\nAfter data preparation, it is always a good practice to visualise the data by using appropriate EDA or map visualisation methods.\n\nVisualising frequency distribution\nIn the code chunk below, ggplot functions are used to reveal the distribution of origin trips by day of the week.\n\n\nCode\nggplot(data=origin_df, \n       aes(x=weekday)) + \n  geom_bar()\n\n\n\n\n\n\n\nVisualising as Point Symbol Map\nIn the code chunk below, tmap functions are used to plot a point symbol map by using the origin trips locations.\n\n\nCode\ntmap_mode(\"plot\")\ntm_shape(origin_sf) +\n  tm_dots()\n\n\n\n\n\nIt is always useful for us to provide the map data a context.\n\n\nDIY\nUsing the step your learned from previous lesson, import Master Plan 2019 Subzone downloaded from data.Gov as sf tibble data.frame. Call the output mpsz2019.\n\n\n\nCode\nmpsz2019 &lt;- st_read(\"data/dataGov/MPSZ2019.kml\") %&gt;%\n  st_transform(crs = 3414)\n\n\nReading layer `URA_MP19_SUBZONE_NO_SEA_PL' from data source \n  `D:\\tskam\\IS415-GAA\\In-class_Ex\\In-class_Ex02\\data\\dataGov\\MPSZ2019.kml' \n  using driver `KML'\nSimple feature collection with 332 features and 2 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY, XYZ\nBounding box:  xmin: 103.6057 ymin: 1.158699 xmax: 104.0885 ymax: 1.470775\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84\n\n\n\nDIY\nUsing the step your learned, plot a point symbol map look similar to the figure below.\n\n\n\nCode\ntm_shape(mpsz2019) +\n  tm_polygons() +\ntm_shape(origin_sf) +\n  tm_dots()\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nThing to learn from the code chunk above\n\nFor plotting multiple geospatial data layer. Polygon layer will be plotted first, then followed by line or point layer or else the point or line features will be covered by the polygon features."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#installing-and-loading-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#installing-and-loading-r-packages",
+    "title": "Hands-on Exercise 1: Geospatial Data Wrangling with R",
+    "section": "",
+    "text": "In this section, I will install and load tidyverse and sf packages.\n\npacman::p_load(tidyverse, sf)"
   }
 ]
