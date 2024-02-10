@@ -8,19 +8,20 @@ execute:
   echo: true
   message: false
   warning: false
+  freeze: true
 editor: visual
 ---
 
 ## Issue installing maptools
 
-**maptools** is retired and binary is removed from CRAN.  However, we can download from [Posit Public Package Manager](https://packagemanager.posit.co/client/#/repos/cran/setup?snapshot=2023-10-13&distribution=windows&r_environment=ide) snapshots by using the code chunk below.
+**maptools** is retired and binary is removed from CRAN. However, we can download from [Posit Public Package Manager](https://packagemanager.posit.co/client/#/repos/cran/setup?snapshot=2023-10-13&distribution=windows&r_environment=ide) snapshots by using the code chunk below.
 
 ```{r}
 #| eval: false
 install.packages("maptools", repos = "https://packagemanager.posit.co/cran/2023-10-13")
 ```
 
-After the installation is completed, it is important to edit the code chunk as shown below in order to avoid maptools being download and install repetitively every time the Quarto document been rendered. 
+After the installation is completed, it is important to edit the code chunk as shown below in order to avoid maptools being download and install repetitively every time the Quarto document been rendered.
 
 ![](img/image1.jpg)
 
@@ -33,7 +34,7 @@ pacman::p_load(maptools, sf, raster, spatstat, tmap, tidyverse)
 
 Although Coastal Outline geospatial data is not provided, we can derive it by using **MP14_SUBZONE_WEB_PL** shapefile, which is readily available in data.gtov.sg.
 
-Firstly, you should download *MP14_SUBZONE_WEB_PL* from data.gov.sg.  Next, import the downloaded shapefile into R environment and call the sf tibble data.frame *mpsz_sf*.  
+Firstly, you should download *MP14_SUBZONE_WEB_PL* from data.gov.sg. Next, import the downloaded shapefile into R environment and call the sf tibble data.frame *mpsz_sf*.
 
 ```{r}
 #| echo: false
@@ -48,11 +49,11 @@ You can display *mpsz_sf* by using the code chunk below.
 plot(mpsz_sf)
 ```
 
-In **sf** package, there are two functions allow us to combine multiple simple features into one simple features.  They are [`st_combine()`](https://r-spatial.github.io/sf/reference/geos_combine.html) and `st_union()`.  
+In **sf** package, there are two functions allow us to combine multiple simple features into one simple features. They are [`st_combine()`](https://r-spatial.github.io/sf/reference/geos_combine.html) and `st_union()`.
 
 `st_combine()` returns a single, combined geometry, with no resolved boundaries; returned geometries may well be invalid.
 
-If y is missing, `st_union(x)` returns a single geometry with resolved boundaries, else the geometries for all unioned pairs of x[i] and y[j].
+If y is missing, `st_union(x)` returns a single geometry with resolved boundaries, else the geometries for all unioned pairs of x\[i\] and y\[j\].
 
 In the code chunk below, [`st_union()`]() is used to derive the coastal outline sf tibble data.frame.
 
@@ -61,7 +62,7 @@ sg_sf <- mpsz_sf %>%
   st_union()
 ```
 
-*sg_sf* will look similar to the figure below. 
+*sg_sf* will look similar to the figure below.
 
 ```{r}
 plot(sg_sf)
@@ -125,7 +126,7 @@ ck = mpsz_sf[mpsz_sf@data$PLN_AREA_N == "CHOA CHU KANG",]
 jw = mpsz_sf[mpsz_sf@data$PLN_AREA_N == "JURONG WEST",]
 ```
 
-On the other hand, `filter()` of dplyr package should be used to extract the target planning areas as shown in the code chunk below. 
+On the other hand, `filter()` of dplyr package should be used to extract the target planning areas as shown in the code chunk below.
 
 ```{r}
 pg <- mpsz_sf %>%
@@ -137,5 +138,3 @@ ck <- mpsz_sf %>%
 jw <- mpsz_sf %>%
   filter(PLN_AREA_N == "JURONG WEST")
 ```
-
-

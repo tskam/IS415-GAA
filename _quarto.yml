@@ -15,6 +15,10 @@ website:
           href: "In-class_Ex/In-class_Ex02/In-class_Ex02.html"
         - text: "In-class Exercise 3"
           href: "In-class_Ex/In-class_Ex03/In-class_Ex03-KDE.html"
+        - text: "In-class Exercise 5: Global and Local Measures of Spatial Autocorrelation: sf methods"
+          href: "In-class_Ex/In-class_Ex05/In-class_Ex05-GLSA.html"
+        - text: "In-class Exercise 5: Emerging Hot Spots Analysis"
+          href: "In-class_Ex/In-class_Ex05/In-class_Ex05-EHSA.html"  
     - text: "Take-home Exercise"
       menu:
         - text: "Take-home Exercise 1"

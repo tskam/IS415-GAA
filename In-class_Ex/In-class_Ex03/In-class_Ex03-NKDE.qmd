@@ -5,6 +5,7 @@ format: html
 execute:
   message: false
   warning: false
+  freeze: true
 editor: visual
 ---
 
@@ -197,7 +198,7 @@ data(bike_accidents)
 
 ## Data Preparation
 
-###  Converting the Date field to a numeric field (counting days)
+### Converting the Date field to a numeric field (counting days)
 
 ```{r}
 bike_accidents$Time <- as.POSIXct(bike_accidents$Date, format = "%Y/%m/%d")
@@ -338,7 +339,6 @@ tm_shape(sample_points) +
 ```
 
 ## Spatio-temporal KDE
-
 
 ```{r}
 cv_scores <- bws_tnkde_cv_likelihood_calc(
