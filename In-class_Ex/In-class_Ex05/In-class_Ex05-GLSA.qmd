@@ -342,6 +342,9 @@ HCSA uses spatial weights to identify locations of statistically significant hot
 
 ## Computing local Gi\* statistics
 
+As usual, we will need to derive a spatial weight matrix before we can compute local Gi* statistics.  Code chunk below will be used to derive a spatial weight matrix by using sfdep functions and tidyverse approach.   
+
+::: {style="font-size: 1.5em"}
 ```{r}
 wm_idw <- hunan_GDPPC %>%
   mutate(nb = st_contiguity(geometry),
@@ -350,6 +353,11 @@ wm_idw <- hunan_GDPPC %>%
                                    alpha = 1),
          .before = 1)
 ```
+:::
+
+::: {.callout-note}
+Gi* and local Gi* are distance-based spatial statistics.  Hence, distance methods instead of contiguity methods should be used to derive the spatial weight matrix.   
+:::
 
 ::: {style="font-size: 1.5em"}
 ```{r}
