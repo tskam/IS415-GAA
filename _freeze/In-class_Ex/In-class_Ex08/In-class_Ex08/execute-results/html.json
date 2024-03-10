@@ -1,0 +1,15 @@
+{
+  "hash": "36ce6abcff572b2d4aae6b1bd538e369",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"In-class Exercise 8: Determine Factors affecting regional economic\"\ndate: \"March 3, 2024\"\ndate-modified: \"last-modified\"\nformat: html\nexecute:\n  eval: true\n  echo: true\n  freeze: true\n  warning: false\n  message: false\n  fig-retine: 3\n---\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(sf, tmap, GWmodel, ggstatsplot)\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
