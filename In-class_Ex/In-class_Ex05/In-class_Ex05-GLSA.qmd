@@ -359,6 +359,8 @@ wm_idw <- hunan_GDPPC %>%
 Gi* and local Gi* are distance-based spatial statistics.  Hence, distance methods instead of contiguity methods should be used to derive the spatial weight matrix.   
 :::
 
+Now, we will compute the local Gi* by using the code chunk below. 
+
 ::: {style="font-size: 1.5em"}
 ```{r}
 HCSA <- wm_idw %>% 
