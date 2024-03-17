@@ -1,0 +1,21 @@
+---
+title: "printing"
+---
+
+```{r}
+#| echo: false
+#| eval: false
+
+renderthis::to_pdf(from = "https://r4va.netlify.app/chap01.html",
+                   to = "D://ISSS608_AY2023-24Jan/03-Hands-on_Exercise/Hands-on_Ex1.pdf")
+
+renderthis::to_pdf(from = "https://r4va.netlify.app/chap02.html",
+                   to = "D://ISSS608_AY2023-24Jan/03-Hands-on_Exercise/Hands-on_Ex2.pdf")
+
+renderthis::to_pdf(from = "https://r4va.netlify.app/chap03.html",
+                   to = "D://ISSS608_AY2023-24Jan/03-Hands-on_Exercise/Hands-on_Ex3.pdf")
+
+renderthis::to_pdf(from = "https://r4va.netlify.app/chap04.html",
+                   to = "D://ISSS608_AY2023-24Jan/03-Hands-on_Exercise/Hands-on_Ex4.pdf")
+
+```
