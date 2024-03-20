@@ -20,7 +20,9 @@ website:
         - text: "In-class Exercise 5: Emerging Hot Spots Analysis"
           href: "In-class_Ex/In-class_Ex05/In-class_Ex05-EHSA.html"
         - text: "In-class Exercise 7: Geographic Segmentation"
-          href: "In-class_Ex/In-class_Ex07/In-class_Ex07-SCCA.html"  
+          href: "In-class_Ex/In-class_Ex07/In-class_Ex07-SCCA.html" 
+        - text: "In-class Exercise 9: Geographically Wegihted Random Forests"
+          href: "In-class_Ex/In-class_Ex09/In-class_Ex09-grf.html"
     - text: "Take-home Exercise"
       menu:
         - text: "Take-home Exercise 1"
