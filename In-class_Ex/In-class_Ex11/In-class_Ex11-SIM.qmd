@@ -1,0 +1,110 @@
+---
+title: "In-class Exercise 11: Spatial Interaction Modelling: simodels"
+date: "13 February 2023"
+date-modified: "last-modified"
+format: html
+execute: 
+  echo: true
+  eval: true
+  freeze: true
+  warning: false
+editor: visual
+---
+
+```{r}
+pacman::p_load(tmap, sf, spdep, sp, Matrix,
+               simodels, reshape2, knitr,
+               tidyverse)
+```
+
+
+```{r}
+# To get the data (pre-loaded in the package)
+u1 = "https://github.com/Robinlovelace/simodels/releases/download/0.0.1/zones_aus.geojson"
+zones_aus = sf::read_sf(u1)
+u2 = "https://www.dropbox.com/s/wi3zxlq5pff1yda/AusMig2011.csv?raw=1"
+od_aus = read.csv(u2)
+```
+
+```{r}
+od = si_to_od(
+  origins = si_zones,        
+  destinations = si_zones,   
+  max_dist = 5000
+  )
+```
+
+```{r}
+gravity_model = function(beta, d, m, n) {
+  m * n * exp(-beta * d / 1000)
+}
+```
+
+```{r}
+od_res = si_calculate(
+  od,
+  fun = gravity_model,
+  d = distance_euclidean,
+  m = origin_all,
+  n = destination_all,
+  constraint_production = origin_all,
+  beta = 0.9
+  )
+```
+
+visualize the results
+
+```{r}
+plot(od_res$distance_euclidean,
+     od_res$interaction)
+```
+
+```{r}
+od_res = od %>% 
+  si_calculate(fun = gravity_model, 
+               m = origin_all,
+               n = destination_all,
+               d = distance_euclidean,
+               constraint_production = origin_all,
+               beta = 0.3)
+od_res %>% 
+  select(interaction)
+```
+
+```{r}
+plot(od_res["interaction"], logz = TRUE)
+```
+
+-   Set n. trips to pubs, assuming that for every trip to the pub there are
+-   50 trips to work (this would be validated/tested/modelled in empirical work)
+
+```{r}
+zones_pubs = si_zones %>% 
+  mutate(to_pubs = all / 50)
+pubs_example = si_pubs %>% 
+  filter(grepl(pattern = "Chemic|Nag", x = name))
+pubs_example$size = c(100, 80)
+od_to_pubs = si_to_od(zones_pubs, pubs_example)
+od_to_pubs_result = od_to_pubs %>% 
+  si_calculate(fun = gravity_model, 
+               m = origin_to_pubs,
+               n = destination_size,
+               d = distance_euclidean,
+               beta = 0.5,
+               constraint_production = origin_to_pubs)
+od_to_pubs_result %>% 
+  select(O, D, destination_name, interaction)
+```
+
+```{r}
+tmap_mode("view")
+od_to_pubs_result %>% 
+  top_n(n = 50, wt = interaction) %>% 
+  tm_shape() +
+  tm_lines(col = "interaction", palette = "viridis", scale = 2)
+```
+
+
+
+
+

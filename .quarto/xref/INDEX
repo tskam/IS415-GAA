@@ -132,5 +132,41 @@
   },
   "In-class_Ex/In-class_Ex09/In-class_Ex09-grf.qmd": {
     "In-class_Ex09-grf.html": "d365fbaa"
+  },
+  "In-class_Ex/In-class_Ex11/In-class_Ex11-SEIM.qmd": {
+    "In-class_Ex11-SEIM.docx": "b3ed021b",
+    "In-class_Ex11-SEIM.tex": "48dab7d5",
+    "In-class_Ex11-SEIM.typ": "91d72f37",
+    "In-class_Ex11-SEIM.html": "06939c37"
+  },
+  "In-class_Ex/In-class_Ex10/data/geospatial/MPSZ-2019.qmd": {
+    "MPSZ-2019.html": "5b5b51dd"
+  },
+  "In-class_Ex/In-class_Ex10/data/network/roads.qmd": {
+    "roads.html": "f3159f4b"
+  },
+  "In-class_Ex/In-class_Ex11/Hands-on_Ex11-FlowData.qmd": {
+    "Hands-on_Ex11-FlowData.html": "2da4014a"
+  },
+  "In-class_Ex/In-class_Ex11/data/geospatial/Business.qmd": {
+    "Business.html": "c5dc9a44"
+  },
+  "In-class_Ex/In-class_Ex11/data/geospatial/entertn.qmd": {
+    "entertn.html": "d80bfb25"
+  },
+  "In-class_Ex/In-class_Ex11/data/geospatial/F&B.qmd": {
+    "F&B.html": "528ff0de"
+  },
+  "In-class_Ex/In-class_Ex11/data/geospatial/FinServ.qmd": {
+    "FinServ.html": "d87ca875"
+  },
+  "In-class_Ex/In-class_Ex11/data/geospatial/Liesure&Recreation.qmd": {
+    "Liesure&Recreation.html": "b2a85848"
+  },
+  "In-class_Ex/In-class_Ex11/data/geospatial/Retails.qmd": {
+    "Retails.html": "c881e6d8"
+  },
+  "In-class_Ex/In-class_Ex11/Hands-on_Ex11-SIM.qmd": {
+    "Hands-on_Ex11-SIM.html": "aa5b7ef8"
   }
 }
