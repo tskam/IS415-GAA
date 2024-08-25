@@ -1,0 +1,185 @@
+---
+title: "In-class Exercise 1"
+author: "Dr. Kam Tin Seong"
+date-modified: "last-modified"
+format: html
+editor: visual
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+## Getting started
+
+::: panel-tabset
+## The task
+
+For the purpose of this in-class exercise, **tidyverse**, **sf** and *ggstatsplot* packages will be used. Write a code chunk to check if these two packages have been installed in R. If yes, load them in R environment.
+
+## The code
+
+```{r}
+pacman::p_load(tidyverse, sf, ggstatsplot)
+```
+:::
+
+## Working with Master Plan Planning Sub-zone Data
+
+::: panel-tabset
+## The task
+
+1.  Create a sub-folder called data in In-class_Ex01 folder.
+2.  If necessary visit data.gov.sg and download *Master Plan 2014 Subzone Boundary (Web)* from the portal. You are required to download both the ESRI shapefile and kml file.
+3.  Write a code chunk to import *Master Plan 2014 Subzone Boundary (Web)* in shapefile and kml save them in sf simple features data frame.
+
+## The code
+
+```{r}
+mpsz_shp <- st_read(dsn = "data/",
+                layer = "MPSZ-2019")
+
+mpsz_kml <- st_read("data/MP19_SUBZONE_WEB_PL.kml")
+```
+:::
+
+## Working with Pre-school Location Data
+
+::: panel-tabset
+## The task
+
+1.  If necessary visit data.gov.sg and download *Pre-Schools Location* from the portal. You are required to download both the kml and geojson files.
+2.  Write a code chunk to import *Pre-Schools Location* in kml geojson save them in sf simple features data frame.
+
+## The code
+
+```{r}
+preschool_kml <- st_read("data/PreSchoolsLocation.kml")
+
+
+preschool_geojson <- st_read("data/PreSchoolsLocation.geojson") 
+```
+:::
+
+## Handling Coordinate Systems
+
+### Checking coordinate system
+
+::: panel-tabset
+## The task
+
+Write a code chunk to check the project of the imported sf objects.
+
+## The code
+
+```{r}
+st_crs(mpsz_shp)
+```
+:::
+
+### Transforming coordinate system
+
+::: panel-tabset
+## The task
+
+Re-write the code chunk to import the Master Plan Sub-zone 2019 and Pre-schools Location with proper transformation
+
+## The code
+
+```{r}
+mpsz <- st_read(dsn = "data/",
+                layer = "MPSZ-2019") %>%
+  st_transform(crs = 3414)
+
+preschool <- st_read("data/PreSchoolsLocation.kml") %>%
+  st_transform(crs = 3414)
+
+```
+:::
+
+## Geospatial Data Wrangling
+
+### Point-in-Polygon count
+
+::: {.panel-tabset}
+
+### The task
+
+Write a code chunk to count the number of pre-schools in each planning sub-zone.
+
+### The code
+
+```{r}
+mpsz <- mpsz %>%
+  mutate(`PreSch Count` = lengths(st_intersects(mpsz, preschool)))
+```
+:::
+
+### Computing density
+
+::: panel-tabset
+### The task
+
+Write a single line code to perform the following tasks:
+
+1.  Derive the area of each planning sub-zone.
+
+2.  Drop the unit of measurement of the area (i.e. m\^2)
+
+3.  Calculate the density of pre-school at the planning sub-zone level.
+
+### The code
+
+```{r}
+mpsz <- mpsz %>%
+  mutate(Area = units::drop_units(
+    st_area(.)),
+    `PreSch Density` = `PreSch Count` / Area * 1000000
+  )
+```
+:::
+
+## Statistical Analysis
+
+::: {.panel-tabset}
+### The task
+Using appropriate Exploratory Data Analysis (EDA) and Confirmatory Data Analysis (CDA) methods to explore and confirm the statistical relationship between Pre-school Density and Pre-school count.
+
+Tip: Refer to `ggscatterstats()` of **ggstatsplot** package.  
+
+### The code
+
+```{r}
+#| eval: false
+mpsz$`PreSch Density` <- as.numeric(as.character(mpsz$`PreSch Density`))
+mpsz$`PreSch Count` <- as.numeric(as.character(mpsz$`PreSch Count`)) 
+mpsz <- as.data.frame(mpsz)
+
+ggscatterstats(data = mpsz,
+               x = `PreSch Density`,
+               y = `PreSch Count`,
+               type = "parametric")
+
+```
+
+### The plot
+
+```{r}
+#| echo: false
+mpsz$`PreSch Density` <- as.numeric(as.character(mpsz$`PreSch Density`))
+mpsz$`PreSch Count` <- as.numeric(as.character(mpsz$`PreSch Count`)) 
+mpsz <- as.data.frame(mpsz)
+
+ggscatterstats(data = mpsz,
+               x = `PreSch Density`,
+               y = `PreSch Count`,
+               type = "parametric")
+
+```
+
+Commet: 
+
+:::
+
+

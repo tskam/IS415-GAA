@@ -1,0 +1,10 @@
+---
+title: "In-class Exercise 1: Geospatial Data Science"
+author: "Dr. Kam Tin Seong"
+date: "August 18, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
+---
