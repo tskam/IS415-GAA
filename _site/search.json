@@ -1999,7 +1999,7 @@
     "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#joining-popdata2023-and-mpsz19_shp",
     "title": "In-class Exercise 2",
     "section": "Joining popdata2023 and mpsz19_shp",
-    "text": "Joining popdata2023 and mpsz19_shp\n\npopdata2023 &lt;- popdata2023 %&gt;%\n  mutate_at(.vars = vars(PA, SZ), \n          .funs = list(toupper)) \n\n\nmpsz_pop2023 &lt;- left_join(mpsz19_shp, popdata2023,\n                          by = c(\"SUBZONE_N\" = \"SZ\"))"
+    "text": "Joining popdata2023 and mpsz19_shp\n\npopdata2023 &lt;- popdata2023 %&gt;%\n  mutate_at(.vars = vars(PA, SZ), \n          .funs = list(toupper)) \n\n\nmpsz_pop2023 &lt;- left_join(mpsz19_shp, popdata2023,\n                          by = c(\"SUBZONE_N\" = \"SZ\"))\n\n\npop2023_mpsz &lt;- left_join(popdata2023, mpsz19_shp, \n                          by = c(\"SZ\" = \"SUBZONE_N\"))"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#choropleth-map-of-dependency-ratio-by-planning-subzone",

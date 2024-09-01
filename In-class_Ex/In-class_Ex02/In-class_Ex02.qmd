@@ -354,7 +354,6 @@ mpsz_pop2023 <- left_join(mpsz19_shp, popdata2023,
                           by = c("SUBZONE_N" = "SZ"))
 ```
 
-
 ```{r}
 pop2023_mpsz <- left_join(popdata2023, mpsz19_shp, 
                           by = c("SZ" = "SUBZONE_N"))
