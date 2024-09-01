@@ -11,7 +11,7 @@
   <meta name="generator" content="quarto-1.4.555">
 
   <meta name="author" content="Dr.&nbsp;Kam Tin Seong">
-  <meta name="dcterms.date" content="2024-09-01">
+  <meta name="dcterms.date" content="2024-08-26">
   <title>IS415-GAA - In-class Exercise 2</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -402,7 +402,7 @@ Dr.&nbsp;Kam Tin Seong
 </div>
 </div>
 
-  <p class="date">01 Sep 2024</p>
+  <p class="date">26 Aug 2024</p>
 </section>
 <section id="getting-started" class="slide level2">
 <h2>Getting started</h2>
@@ -721,7 +721,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="In-class_Ex02_files/figure-revealjs/unnamed-chunk-16-1.png" width="960"></p>
+<p><img data-src="In-class_Ex02_files/figure-revealjs/unnamed-chunk-16-1.png" width="768"></p>
 </figure>
 </div>
 </div>
@@ -741,8 +741,10 @@ Geodetic CRS:  WGS 84</code></pre>
 </ol>
 </div>
 <div id="tabset-11-2">
+<div style="font-size: 1.50em">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>popdata <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/respopagesextod2023.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -759,6 +761,7 @@ Geodetic CRS:  WGS 84</code></pre>
 </ol>
 </div>
 <div id="tabset-12-2">
+<div style="font-size: 1.50em">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>popdata2023 <span class="ot">&lt;-</span> popdata <span class="sc">%&gt;%</span> </span>
 <span id="cb22-2"><a></a>  <span class="fu">group_by</span>(PA, SZ, AG) <span class="sc">%&gt;%</span> </span>
@@ -774,6 +777,7 @@ Geodetic CRS:  WGS 84</code></pre>
 [11] "45_to_49"    "50_to_54"    "55_to_59"    "5_to_9"      "60_to_64"   
 [16] "65_to_69"    "70_to_74"    "75_to_79"    "80_to_84"    "85_to_89"   
 [21] "90_and_Over"</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -796,6 +800,7 @@ Geodetic CRS:  WGS 84</code></pre>
 </ul>
 </div>
 <div id="tabset-13-2">
+<div style="font-size: 1.50em">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>popdata2023 <span class="ot">&lt;-</span> popdata2023 <span class="sc">%&gt;%</span></span>
 <span id="cb24-2"><a></a>  <span class="fu">mutate</span>(<span class="at">YOUNG=</span><span class="fu">rowSums</span>(.[<span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>]) <span class="co"># Aged 0 - 24, 10 - 24</span></span>
@@ -813,21 +818,24 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
 </div>
+</div>
 </section>
 <section id="joining-popdata2023-and-mpsz19_shp" class="slide level2">
 <h2>Joining popdata2023 and mpsz19_shp</h2>
+<p>The code chunk below is used to change data in the PA and SZ fields into uppercase.</p>
+<div style="font-size: 1.50em">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>popdata2023 <span class="ot">&lt;-</span> popdata2023 <span class="sc">%&gt;%</span></span>
 <span id="cb25-2"><a></a>  <span class="fu">mutate_at</span>(<span class="at">.vars =</span> <span class="fu">vars</span>(PA, SZ), </span>
 <span id="cb25-3"><a></a>          <span class="at">.funs =</span> <span class="fu">list</span>(toupper)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<p>The code chunk below is used to perform left-join whereby the join fields are <em>SUBZONE_N</em> from the <em>mpsz19_shp</em> sf data.frame and <em>SZ</em> from the <em>popdata2023</em> data.frame.</p>
+<div style="font-size: 1.50em">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>mpsz_pop2023 <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mpsz19_shp, popdata2023,</span>
 <span id="cb26-2"><a></a>                          <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"SUBZONE_N"</span> <span class="ot">=</span> <span class="st">"SZ"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>pop2023_mpsz <span class="ot">&lt;-</span> <span class="fu">left_join</span>(popdata2023, mpsz19_shp, </span>
-<span id="cb27-2"><a></a>                          <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"SZ"</span> <span class="ot">=</span> <span class="st">"SUBZONE_N"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="choropleth-map-of-dependency-ratio-by-planning-subzone" class="slide level2">
@@ -840,112 +848,44 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="In-class_Ex02_files/figure-revealjs/unnamed-chunk-23-1.png" width="960"></p>
+<p><img data-src="In-class_Ex02_files/figure-revealjs/unnamed-chunk-22-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 <div id="tabset-14-2">
+<div style="font-size: 1.20em">
 <div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="In-class_Ex02_files/figure-revealjs/unnamed-chunk-24-1.png" width="960"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">tm_shape</span>(mpsz_pop2023)<span class="sc">+</span></span>
+<span id="cb27-2"><a></a>  </span>
+<span id="cb27-3"><a></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>, </span>
+<span id="cb27-4"><a></a>          <span class="at">style =</span> <span class="st">"quantile"</span>, </span>
+<span id="cb27-5"><a></a>          <span class="at">palette =</span> <span class="st">"Blues"</span>,</span>
+<span id="cb27-6"><a></a>          <span class="at">title =</span> <span class="st">"Dependency ratio"</span>) <span class="sc">+</span></span>
+<span id="cb27-7"><a></a>  </span>
+<span id="cb27-8"><a></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Distribution of Dependency Ratio by planning subzone"</span>,</span>
+<span id="cb27-9"><a></a>            <span class="at">main.title.position =</span> <span class="st">"center"</span>,</span>
+<span id="cb27-10"><a></a>            <span class="at">main.title.size =</span> <span class="dv">1</span>,</span>
+<span id="cb27-11"><a></a>            <span class="at">legend.title.size =</span> <span class="dv">1</span>,</span>
+<span id="cb27-12"><a></a>            <span class="at">legend.height =</span> <span class="fl">0.45</span>, </span>
+<span id="cb27-13"><a></a>            <span class="at">legend.width =</span> <span class="fl">0.35</span>,</span>
+<span id="cb27-14"><a></a>            <span class="at">bg.color =</span> <span class="st">"#E4D5C9"</span>,</span>
+<span id="cb27-15"><a></a>            <span class="at">frame =</span> F) <span class="sc">+</span></span>
+<span id="cb27-16"><a></a>  </span>
+<span id="cb27-17"><a></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb27-18"><a></a>  <span class="fu">tm_compass</span>(<span class="at">type=</span><span class="st">"8star"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb27-19"><a></a>  <span class="fu">tm_scale_bar</span>() <span class="sc">+</span></span>
+<span id="cb27-20"><a></a>  <span class="fu">tm_grid</span>(<span class="at">alpha =</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb27-21"><a></a>  <span class="fu">tm_credits</span>(<span class="st">"Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)</span><span class="sc">\n</span><span class="st"> and Population data from Department of Statistics (DOS)"</span>, </span>
+<span id="cb27-22"><a></a>             <span class="at">position =</span> <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"bottom"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
-</div>
-</div>
-</section>
-<section id="analytical-map-percentile-map" class="slide level2">
-<h2>Analytical Map: Percentile Map</h2>
-<h3 id="the-concept">The concept</h3>
-<p>The percentile map is a special type of quantile map with six specific categories: 0-1%,1-10%, 10-50%,50-90%,90-99%, and 99-100%. The corresponding breakpoints can be derived by means of the base R quantile command, passing an explicit vector of cumulative probabilities as c(0,.01,.1,.5,.9,.99,1). Note that the begin and endpoint need to be included.</p>
-</section>
-<section id="analytical-map-percentile-map-1" class="slide level2">
-<h2>Analytical Map: Percentile Map</h2>
-<h3 id="step-1-data-preparation">Step 1: Data Preparation</h3>
-<p>The code chunk below excludes records with NA by using the code chunk below.</p>
-<div style="font-size: 1.50em">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>mpsz_pop2023 <span class="ot">&lt;-</span> mpsz_pop2023 <span class="sc">%&gt;%</span></span>
-<span id="cb28-2"><a></a>  <span class="fu">drop_na</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</section>
-<section id="analytical-map-percentile-map-2" class="slide level2">
-<h2>Analytical Map: Percentile Map</h2>
-<h3 id="step-2-the-get-function">Step 2: The get function</h3>
-<p>The code chunk below defines a function to get the input data and field to be used for creating the percentile map.</p>
-<div style="font-size: 1.50em">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>get.var <span class="ot">&lt;-</span> <span class="cf">function</span>(vname,df) {</span>
-<span id="cb29-2"><a></a>  v <span class="ot">&lt;-</span> df[vname] <span class="sc">%&gt;%</span> </span>
-<span id="cb29-3"><a></a>    <span class="fu">st_set_geometry</span>(<span class="cn">NULL</span>)</span>
-<span id="cb29-4"><a></a>  v <span class="ot">&lt;-</span> <span class="fu">unname</span>(v[,<span class="dv">1</span>])</span>
-<span id="cb29-5"><a></a>  <span class="fu">return</span>(v)</span>
-<span id="cb29-6"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</section>
-<section id="analytical-map-percentile-map-3" class="slide level2">
-<h2>Analytical Map: Percentile Map</h2>
-<h3 id="step-3-a-percentile-mapping-function">Step 3: A percentile mapping function</h3>
-<p>The code chunk below creates a function for computing and plotting the percentile map.</p>
-<div style="font-size: 1.15em">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>percentmap <span class="ot">&lt;-</span> <span class="cf">function</span>(vnam, df, <span class="at">legtitle=</span><span class="cn">NA</span>, <span class="at">mtitle=</span><span class="st">"Percentile Map"</span>){</span>
-<span id="cb30-2"><a></a>  percent <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,.<span class="dv">01</span>,.<span class="dv">1</span>,.<span class="dv">5</span>,.<span class="dv">9</span>,.<span class="dv">99</span>,<span class="dv">1</span>)</span>
-<span id="cb30-3"><a></a>  var <span class="ot">&lt;-</span> <span class="fu">get.var</span>(vnam, df)</span>
-<span id="cb30-4"><a></a>  bperc <span class="ot">&lt;-</span> <span class="fu">quantile</span>(var, percent)</span>
-<span id="cb30-5"><a></a>  <span class="fu">tm_shape</span>(mpsz_pop2023) <span class="sc">+</span></span>
-<span id="cb30-6"><a></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
-<span id="cb30-7"><a></a>  <span class="fu">tm_shape</span>(df) <span class="sc">+</span></span>
-<span id="cb30-8"><a></a>     <span class="fu">tm_fill</span>(vnam,</span>
-<span id="cb30-9"><a></a>             <span class="at">title=</span>legtitle,</span>
-<span id="cb30-10"><a></a>             <span class="at">breaks=</span>bperc,</span>
-<span id="cb30-11"><a></a>             <span class="at">palette=</span><span class="st">"Blues"</span>,</span>
-<span id="cb30-12"><a></a>          <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"&lt; 1%"</span>, <span class="st">"1% - 10%"</span>, <span class="st">"10% - 50%"</span>, <span class="st">"50% - 90%"</span>, <span class="st">"90% - 99%"</span>, <span class="st">"&gt; 99%"</span>))  <span class="sc">+</span></span>
-<span id="cb30-13"><a></a>  <span class="fu">tm_borders</span>() <span class="sc">+</span></span>
-<span id="cb30-14"><a></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> mtitle, </span>
-<span id="cb30-15"><a></a>            <span class="at">title.position =</span> <span class="fu">c</span>(<span class="st">"right"</span>,<span class="st">"bottom"</span>))</span>
-<span id="cb30-16"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</section>
-<section id="analytical-map-percentile-map-4" class="slide level2">
-<h2>Analytical Map: Percentile Map</h2>
-<h3 id="step-4-running-the-functions">Step 4: Running the functions</h3>
-<p>The code chunk below runs the percentile map function.</p>
-<div style="font-size: 1.50em">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">percentmap</span>(<span class="st">"DEPENDENCY"</span>, mpsz_pop2023)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="In-class_Ex02_files/figure-revealjs/unnamed-chunk-28-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="analytical-map-box-map" class="slide level2">
-<h2>Analytical Map: Box Map</h2>
-<h3 id="the-concept-1">The Concept</h3>
-<p>In essence, a box map is an augmented quartile map, with an additional lower and upper category. When there are lower outliers, then the starting point for the breaks is the minimum value, and the second break is the lower fence. In contrast, when there are no lower outliers, then the starting point for the breaks will be the lower fence, and the second break is the minimum value (there will be no observations that fall in the interval between the lower fence and the minimum value).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpsz_pop2023,</span>
-<span id="cb32-2"><a></a>       <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>,</span>
-<span id="cb32-3"><a></a>           <span class="at">y =</span> DEPENDENCY)) <span class="sc">+</span></span>
-<span id="cb32-4"><a></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
 </div>
 
-<img data-src="In-class_Ex02_files/figure-revealjs/unnamed-chunk-29-1.png" width="960" class="r-stretch"><div class="quarto-auto-generated-content">
+<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
 </div>

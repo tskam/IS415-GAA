@@ -1,7 +1,7 @@
 ---
 title: "In-class Exercise 2"
 author: "Dr. Kam Tin Seong"
-date: "`r Sys.Date()`"
+date: "August 26, 2024"
 format: 
   revealjs:
     width: 1600
@@ -263,7 +263,8 @@ ggscatterstats(data = mpsz19_shp,
 
 ```{r}
 #| echo: false
-#| fig-height: 10
+#| fig-height: 7
+#| fig-width: 8
 mpsz19_shp$`PreSch Density` <- as.numeric(as.character(mpsz19_shp$`PreSch Density`))
 mpsz19_shp$`PreSch Count` <- as.numeric(as.character(mpsz19_shp$`PreSch Count`)) 
 mpsz19_df <- as.data.frame(mpsz19_shp)
@@ -284,9 +285,11 @@ ggscatterstats(data = mpsz19_df,
 
 ### The code
 
+::: {style="font-size: 1.50em"}
 ```{r}
 popdata <- read_csv("data/respopagesextod2023.csv")
 ```
+:::
 :::
 
 ## Data Wrangling
@@ -298,6 +301,7 @@ popdata <- read_csv("data/respopagesextod2023.csv")
 
 ### The code
 
+::: {style="font-size: 1.50em"}
 ```{r}
 popdata2023 <- popdata %>% 
   group_by(PA, SZ, AG) %>% 
@@ -308,6 +312,7 @@ popdata2023 <- popdata %>%
 
 colnames(popdata2023)
 ```
+:::
 :::
 
 ## Data Processing
@@ -325,6 +330,7 @@ Write a code chunk to derive a tibble data.framewith the following fields PA, SZ
 
 ### The code
 
+::: {style="font-size: 1.50em"}
 ```{r}
 popdata2023 <- popdata2023 %>%
   mutate(YOUNG=rowSums(.[3:6]) # Aged 0 - 24, 10 - 24
@@ -340,24 +346,28 @@ popdata2023 <- popdata2023 %>%
          `TOTAL`, `DEPENDENCY`)
 ```
 :::
+:::
 
 ## Joining popdata2023 and mpsz19_shp
 
+The code chunk below is used to change data in the PA and SZ fields into uppercase.  
+
+::: {style="font-size: 1.50em"}
 ```{r}
 popdata2023 <- popdata2023 %>%
   mutate_at(.vars = vars(PA, SZ), 
           .funs = list(toupper)) 
 ```
+:::
 
+The code chunk below is used to perform left-join whereby the join fields are *SUBZONE_N* from the *mpsz19_shp* sf data.frame and *SZ* from the *popdata2023* data.frame.
+
+::: {style="font-size: 1.50em"}
 ```{r}
 mpsz_pop2023 <- left_join(mpsz19_shp, popdata2023,
                           by = c("SUBZONE_N" = "SZ"))
 ```
-
-```{r}
-pop2023_mpsz <- left_join(popdata2023, mpsz19_shp, 
-                          by = c("SZ" = "SUBZONE_N"))
-```
+:::
 
 ## Choropleth Map of Dependency Ratio by Planning Subzone
 
@@ -392,8 +402,9 @@ tm_shape(mpsz_pop2023)+
 
 ### The code
 
+::: {style="font-size: 1.20em"}
 ```{r}
-#| echo: false
+#| eval: false
 tm_shape(mpsz_pop2023)+
   
   tm_fill("DEPENDENCY", 
@@ -418,91 +429,5 @@ tm_shape(mpsz_pop2023)+
              position = c("left", "bottom"))
 ```
 :::
-
-## Analytical Map: Percentile Map
-
-### The concept
-
-The percentile map is a special type of quantile map with six specific categories: 0-1%,1-10%, 10-50%,50-90%,90-99%, and 99-100%. The corresponding breakpoints can be derived by means of the base R quantile command, passing an explicit vector of cumulative probabilities as c(0,.01,.1,.5,.9,.99,1). Note that the begin and endpoint need to be included.
-
-## Analytical Map: Percentile Map
-
-### Step 1: Data Preparation
-
-The code chunk below excludes records with NA by using the code chunk below.
-
-::: {style="font-size: 1.50em"}
-```{r}
-mpsz_pop2023 <- mpsz_pop2023 %>%
-  drop_na()
-```
 :::
 
-## Analytical Map: Percentile Map
-
-### Step 2: The get function
-
-The code chunk below defines a function to get the input data and field to be used for creating the percentile map.
-
-::: {style="font-size: 1.50em"}
-```{r}
-get.var <- function(vname,df) {
-  v <- df[vname] %>% 
-    st_set_geometry(NULL)
-  v <- unname(v[,1])
-  return(v)
-}
-```
-:::
-
-## Analytical Map: Percentile Map
-
-### Step 3: A percentile mapping function
-
-The code chunk below creates a function for computing and plotting the percentile map.
-
-::: {style="font-size: 1.15em"}
-```{r}
-percentmap <- function(vnam, df, legtitle=NA, mtitle="Percentile Map"){
-  percent <- c(0,.01,.1,.5,.9,.99,1)
-  var <- get.var(vnam, df)
-  bperc <- quantile(var, percent)
-  tm_shape(mpsz_pop2023) +
-  tm_polygons() +
-  tm_shape(df) +
-     tm_fill(vnam,
-             title=legtitle,
-             breaks=bperc,
-             palette="Blues",
-          labels=c("< 1%", "1% - 10%", "10% - 50%", "50% - 90%", "90% - 99%", "> 99%"))  +
-  tm_borders() +
-  tm_layout(main.title = mtitle, 
-            title.position = c("right","bottom"))
-}
-```
-:::
-
-## Analytical Map: Percentile Map
-
-### Step 4: Running the functions
-
-The code chunk below runs the percentile map function.
-
-::: {style="font-size: 1.50em"}
-```{r}
-percentmap("DEPENDENCY", mpsz_pop2023)
-```
-:::
-
-## Analytical Map: Box Map
-
-### The Concept
-
-In essence, a box map is an augmented quartile map, with an additional lower and upper category. When there are lower outliers, then the starting point for the breaks is the minimum value, and the second break is the lower fence. In contrast, when there are no lower outliers, then the starting point for the breaks will be the lower fence, and the second break is the minimum value (there will be no observations that fall in the interval between the lower fence and the minimum value).
-
-```{r}
-ggplot(data = mpsz_pop2023,
-       aes(x = "",
-           y = DEPENDENCY)) +
-  geom_boxplot()
-```
