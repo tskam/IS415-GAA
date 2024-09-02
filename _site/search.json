@@ -17,8 +17,8 @@
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#issue-1-installing-maptools",
     "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#issue-1-installing-maptools",
     "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
-    "section": "",
-    "text": "maptools is retired and binary is removed from CRAN. However, we can download from Posit Public Package Manager snapshots by using the code chunk below.\n\n\ninstall.packages(\"maptools\", \n                 repos = \"https://packagemanager.posit.co/cran/2023-10-13\")"
+    "section": "Issue 1: Installing maptools",
+    "text": "Issue 1: Installing maptools\nmaptools is retired and binary is removed from CRAN. However, we can download from Posit Public Package Manager snapshots by using the code chunk below.\n\n\ninstall.packages(\"maptools\", \n                 repos = \"https://packagemanager.posit.co/cran/2023-10-13\")"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#issue-1-installing-maptools-1",
@@ -32,7 +32,7 @@
     "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#issue-2-creating-coastal-outline",
     "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
     "section": "Issue 2: Creating coastal outline",
-    "text": "Issue 2: Creating coastal outline\nIn sf package, there are two functions allow us to combine multiple simple features into one simple features. They are st_combine() and st_union().\nst_combine() returns a single, combined geometry, with no resolved boundaries; returned geometries may well be invalid.\nIf y is missing, st_union(x) returns a single geometry with resolved boundaries, else the geometries for all unioned pairs of x[i] and y[j].\n\n\nWorking with st_union()\n\n\nThe code chunk below, st_union()is used to derive the coastal outline sf tibble data.frame.\n\n\nsg_sf &lt;- mpsz_sf %&gt;%\n  st_union()\n\n\nsg_sf will look similar to the figure below."
+    "text": "Issue 2: Creating coastal outline\nIn sf package, there are two functions allow us to combine multiple simple features into one simple features. They are st_combine() and st_union().\nst_combine() returns a single, combined geometry, with no resolved boundaries; returned geometries may well be invalid.\nIf y is missing, st_union(x) returns a single geometry with resolved boundaries, else the geometries for all unioned pairs of x[i] and y[j]."
   },
   {
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#introducing-spatstat-package",
@@ -46,7 +46,7 @@
     "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#spatstat",
     "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
     "section": "spatstat",
-    "text": "spatstat\n\nspatstat sub-packages\n\n\nThe spatstat package now contains only documentation and introductory material. It provides beginner’s introductions, vignettes, interactive demonstration scripts, and a few help files summarising the package.\nThe spatstat.data package now contains all the datasets for spatstat.\nThe spatstat.utils package contains basic utility functions for spatstat.\nThe spatstat.univar package contains functions for estimating and manipulating probability distributions of one-dimensional random variables.\nThe spatstat.sparse package contains functions for manipulating sparse arrays and performing linear algebra.\nThe spatstat.geom package contains definitions of spatial objects (such as point patterns, windows and pixel images) and code which performs geometrical operations.\nThe spatstat.random package contains functions for random generation of spatial patterns and random simulation of models.\nThe spatstat.explore package contains the code for exploratory data analysis and nonparametric analysis of spatial data.\nThe spatstat.model package contains the code for model-fitting, model diagnostics, and formal inference.\nThe spatstat.linnet package defines spatial data on a linear network, and performs geometrical operations and statistical analysis on such data."
+    "text": "spatstat\nspatstat sub-packages\n\n\nThe spatstat package now contains only documentation and introductory material. It provides beginner’s introductions, vignettes, interactive demonstration scripts, and a few help files summarising the package.\nThe spatstat.data package now contains all the datasets for spatstat.\nThe spatstat.utils package contains basic utility functions for spatstat.\nThe spatstat.univar package contains functions for estimating and manipulating probability distributions of one-dimensional random variables.\nThe spatstat.sparse package contains functions for manipulating sparse arrays and performing linear algebra.\nThe spatstat.geom package contains definitions of spatial objects (such as point patterns, windows and pixel images) and code which performs geometrical operations.\nThe spatstat.random package contains functions for random generation of spatial patterns and random simulation of models.\nThe spatstat.explore package contains the code for exploratory data analysis and nonparametric analysis of spatial data.\nThe spatstat.model package contains the code for model-fitting, model diagnostics, and formal inference.\nThe spatstat.linnet package defines spatial data on a linear network, and performs geometrical operations and statistical analysis on such data."
   },
   {
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#creating-ppp-objects-from-sf-data.frame",
@@ -201,5 +201,61 @@
     "title": "In-class Exercise 2",
     "section": "Choropleth Map of Dependency Ratio by Planning Subzone",
     "text": "Choropleth Map of Dependency Ratio by Planning Subzone\n\nThe mapThe code\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ntm_shape(mpsz_pop2023)+\n  \n  tm_fill(\"DEPENDENCY\", \n          style = \"quantile\", \n          palette = \"Blues\",\n          title = \"Dependency ratio\") +\n  \n  tm_layout(main.title = \"Distribution of Dependency Ratio by planning subzone\",\n            main.title.position = \"center\",\n            main.title.size = 1,\n            legend.title.size = 1,\n            legend.height = 0.45, \n            legend.width = 0.35,\n            bg.color = \"#E4D5C9\",\n            frame = F) +\n  \n  tm_borders(alpha = 0.5) +\n  tm_compass(type=\"8star\", size = 1.5) +\n  tm_scale_bar() +\n  tm_grid(alpha =0.2) +\n  tm_credits(\"Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\\n and Population data from Department of Statistics (DOS)\", \n             position = c(\"left\", \"bottom\"))"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#geospatial-analytics-for-social-good-myanmar-arm-conflict-case-study",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#geospatial-analytics-for-social-good-myanmar-arm-conflict-case-study",
+    "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
+    "section": "Geospatial Analytics for Social Good: Myanmar Arm Conflict Case Study",
+    "text": "Geospatial Analytics for Social Good: Myanmar Arm Conflict Case Study\n\nBackground\nMyanmar’s Troubled History: Coups, Military Rule, and Ethnic Conflict\nMyanmar conflict\nMyanmar civil war (2021–present)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#the-data",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#the-data",
+    "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
+    "section": "The Data",
+    "text": "The Data\nArmed Conflict Location & Event Data (ACLED)\n\n\nAn independent, impartial, international non-profit organization collecting data on violent conflict and protest in all countries and territories in the world.\n\nGIS Data\n\nMyanmar Information Management Unit, MIMU"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#kernel-density-estimation-of-spatial-point-event",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#kernel-density-estimation-of-spatial-point-event",
+    "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
+    "section": "Kernel Density Estimation of Spatial Point Event",
+    "text": "Kernel Density Estimation of Spatial Point Event\nThe code chunk below re-scale the unit of measurement from metre to kilometre before performing KDE.\n\n\nchildcareSG_ppp.km &lt;- rescale.ppp(childcareSG_ppp, \n                                  1000, \n                                  \"km\")\n\nkde_childcareSG_adaptive &lt;- adaptive.density(\n  childcareSG_ppp.km, \n  method=\"kernel\")\nplot(kde_childcareSG_adaptive)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#kernel-density-estimation",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#kernel-density-estimation",
+    "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
+    "section": "Kernel Density Estimation",
+    "text": "Kernel Density Estimation\nCode chunk shown two different ways to convert KDE output into grid object\n\nmaptools methodspatstat.geom method\n\n\n\n\npar(bg = '#E4D5C9')\n\ngridded_kde_childcareSG_ad &lt;- maptools::as.SpatialGridDataFrame.im(\n  kde_childcareSG_adaptive)\nspplot(gridded_kde_childcareSG_ad)\n\n\n\n\n\n\ngridded_kde_childcareSG_ad &lt;- as(\n  kde_childcareSG_adaptive,\n  \"SpatialGridDataFrame\")\nspplot(gridded_kde_childcareSG_ad)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#kernel-density-estimation-1",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#kernel-density-estimation-1",
+    "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
+    "section": "Kernel Density Estimation",
+    "text": "Kernel Density Estimation\nVisualising KDE using tmap\nThe code chunk below is used to plot the output raster by using tmap functions.\n\n\ntm_shape(kde_childcareSG_ad_raster) + \n  tm_raster(palette = \"viridis\") +\n  tm_layout(legend.position = c(\"right\", \"bottom\"), \n            frame = FALSE,\n            bg.color = \"#E4D5C9\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#kernel-density-estimation-2",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#kernel-density-estimation-2",
+    "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
+    "section": "Kernel Density Estimation",
+    "text": "Kernel Density Estimation\nVisualising KDE using tmap\n\ntm_shape(kde_childcareSG_ad_raster) + \n  tm_raster(palette = \"viridis\") +\n  tm_layout(legend.position = c(\"right\", \"bottom\"), \n            frame = FALSE,\n            bg.color = \"#E4D5C9\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#importing-acled-data",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#importing-acled-data",
+    "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
+    "section": "Importing ACLED Data",
+    "text": "Importing ACLED Data\n\nThe taskThe code\n\n\nUsing the steps you learned in previous lessons, import the ACLED data into R environment as an sf tibble data.frame.\n\n\n\n\nacled_sf &lt;- read_csv(\"data/Myanmar/ACLED_Myanmar.csv\") %&gt;%\n  st_as_sf(coords = c(\n    \"longitude\", \"latitude\"),\n    crs=4326) %&gt;%\n  st_transform(crs = 32647) %&gt;%\n  mutate(event_date = dmy(event_date))"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#visualising-acled-data",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#visualising-acled-data",
+    "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
+    "section": "Visualising ACLED Data",
+    "text": "Visualising ACLED Data\n\nThe taskThe code\n\n\nUsing the steps you learned in previous lessons, import the ACLED data into R environment as an sf tibble data.frame.\n\n\n\n\ntmap_mode(\"plot\")\nacled_sf %&gt;%\n  filter(year == 2023 | \n           event_type == \"Political violence\") %&gt;%\n  tm_shape()+\n  tm_dots()\n\n\n\n\n\n\n\ntmap_mode(\"plot\")"
   }
 ]

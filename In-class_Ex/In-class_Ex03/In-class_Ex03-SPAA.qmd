@@ -1,0 +1,346 @@
+---
+title: "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods"
+author: "Dr. Kam Tin Seong"
+date: "`r Sys.Date()`"
+format: 
+  revealjs:
+    width: 1600
+    height: 900
+    show-notes: false
+    slide-number: true
+    show-slide-number: all
+execute: 
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+date-format: "DD MMM YYYY"
+---
+
+## Issue 1: Installing maptools
+
+**maptools** is retired and binary is removed from CRAN. However, we can download from [Posit Public Package Manager](https://packagemanager.posit.co/client/#/repos/cran/setup?snapshot=2023-10-13&distribution=windows&r_environment=ide) snapshots by using the code chunk below.
+
+::: {style="font-size: 1.50em"}
+```{r}
+#| eval: false
+install.packages("maptools", 
+                 repos = "https://packagemanager.posit.co/cran/2023-10-13")
+```
+:::
+
+## Issue 1: Installing maptools
+
+::: columns
+::: {.column width="65%"}
+After the installation is completed, it is important to edit the code chunk as shown below in order to avoid **maptools** being download and install repetitively every time the Quarto document been rendered.
+
+![](img/image1.jpg)
+
+```{r}
+#| echo: false
+pacman::p_load(sf, raster, spatstat, tmap, tidyverse)
+```
+:::
+:::
+
+## Issue 2: Creating coastal outline
+
+```{r}
+#| echo: false
+#| output: false
+childcare_sf <- st_read("data/ChildCareServices.geojson") %>%
+  st_transform(crs = 3414)
+
+mpsz_sf <- st_read(dsn = "data", layer="MP14_SUBZONE_WEB_PL")
+```
+
+In **sf** package, there are two functions allow us to combine multiple simple features into one simple features. They are [`st_combine()`](https://r-spatial.github.io/sf/reference/geos_combine.html) and `st_union()`.
+
+`st_combine()` returns a single, combined geometry, with no resolved boundaries; returned geometries may well be invalid.
+
+If y is missing, `st_union(x)` returns a single geometry with resolved boundaries, else the geometries for all unioned pairs of x\[i\] and y\[j\].
+
+------------------------------------------------------------------------
+
+### Working with `st_union()`
+
+::: columns
+::: {.column width="65%"}
+The code chunk below, `st_union()`is used to derive the coastal outline sf tibble data.frame.
+
+::: {style="font-size: 1.50em"}
+```{r}
+sg_sf <- mpsz_sf %>%
+  st_union()
+```
+:::
+
+*sg_sf* will look similar to the figure below.
+
+```{r}
+#| echo: false
+plot(sg_sf)
+```
+:::
+:::
+
+## Introducing spatstat package
+
+[**spatstat**](https://spatstat.org/) R package is a comprehensive open-source toolbox for analysing Spatial Point Patterns. Focused mainly on two-dimensional point patterns, including multitype or marked points, in any spatial region.
+
+## spatstat
+
+### spatstat sub-packages
+
+::: {style="font-size: 0.75em"}
+-   The [**spatstat**](https://cran.r-project.org/web/packages/spatstat/index.html) package now contains only documentation and introductory material. It provides beginner’s introductions, vignettes, interactive demonstration scripts, and a few help files summarising the package.
+-   The [**spatstat.data**]() package now contains all the datasets for spatstat.
+-   The [**spatstat.utils**](https://cran.r-project.org/web/packages/spatstat.utils/index.html) package contains basic utility functions for spatstat.
+-   The [**spatstat.univar**](https://cran.r-project.org/web/packages/spatstat.univar/spatstat.univar.pdf) package contains functions for estimating and manipulating probability distributions of one-dimensional random variables.
+-   The [**spatstat.sparse**](https://cran.r-project.org/web/packages/spatstat.sparse/spatstat.sparse.pdf) package contains functions for manipulating sparse arrays and performing linear algebra.
+-   The [**spatstat.geom**](https://cran.r-project.org/web/packages/spatstat.geom/index.html) package contains definitions of spatial objects (such as point patterns, windows and pixel images) and code which performs geometrical operations.
+-   The [**spatstat.random**](https://cran.r-project.org/web/packages/spatstat.random/index.html) package contains functions for random generation of spatial patterns and random simulation of models.
+-   The [**spatstat.explore**](https://cran.r-project.org/web/packages/spatstat.explore/index.html) package contains the code for exploratory data analysis and nonparametric analysis of spatial data.
+-   The [**spatstat.model**](https://cran.r-project.org/web/packages/spatstat.model/index.html) package contains the code for model-fitting, model diagnostics, and formal inference.
+-   The [**spatstat.linnet**](https://cran.r-project.org/web/packages/spatstat.linnet/index.html) package defines spatial data on a linear network, and performs geometrical operations and statistical analysis on such data.
+:::
+
+## Creating ppp objects from sf data.frame
+
+Instead of using the two steps approaches discussed in Hands-on Exercise 3 to create the **ppp** objects, in this section you will learn how to work with sf data.frame.
+
+::: columns
+::: {.column width="50%"}
+In the code chunk below, [`as.ppp()`](https://search.r-project.org/CRAN/refmans/spatstat.geom/html/as.ppp.html) of [**spatstat.geom**](https://cran.r-project.org/web/packages/spatstat.geom/spatstat.geom.pdf) package is used to derive an **ppp** object layer directly from a sf tibble data.frame.
+
+::: {style="font-size: 1.50em"}
+```{r}
+childcare_ppp <- as.ppp(childcare_sf)
+plot(childcare_ppp)
+```
+:::
+:::
+
+::: {.column width="50%"}
+Next, `summary()` can be used to reveal the properties of the newly created ppp objects.
+
+::: {style="font-size: 1.50em"}
+```{r}
+summary(childcare_ppp)
+```
+:::
+:::
+:::
+
+## Creating ***owin*** object from sf data.frame
+
+::: columns
+::: {.column width="50%"}
+In the code chunk `as.owin()` of **spatstat.geom** is used to create an **owin** object class from polygon sf tibble data.frame.
+
+::: {style="font-size: 1.50em"}
+```{r}
+sg_owin <- as.owin(sg_sf)
+plot(sg_owin)
+```
+:::
+:::
+
+::: {.column width="50%"}
+Next, *summary()* function is used to display the summary information of the owin object class.
+
+::: {style="font-size: 1.50em"}
+```{r}
+summary(sg_owin)
+```
+:::
+:::
+:::
+
+## Combining point events object and owin object
+
+::: panel-tabset
+### The task
+
+Using the step you learned from Hands-on Exercise 3, create an ppp object by combining childcare_ppp and sg_owin.
+
+### The code
+
+::: {style="font-size: 1.50em"}
+```{r}
+childcareSG_ppp = childcare_ppp[sg_owin]
+```
+:::
+
+### The output
+
+The output object combined both the point and polygon feature in one ppp object class as shown below.
+
+::: {style="font-size: 1.50em"}
+```{r}
+plot(childcareSG_ppp)
+```
+:::
+:::
+
+## Kernel Density Estimation of Spatial Point Event
+
+The code chunk below re-scale the unit of measurement from metre to kilometre before performing KDE.
+
+::: {style="font-size: 1.50em"}
+```{r}
+childcareSG_ppp.km <- rescale.ppp(childcareSG_ppp, 
+                                  1000, 
+                                  "km")
+
+kde_childcareSG_adaptive <- adaptive.density(
+  childcareSG_ppp.km, 
+  method="kernel")
+plot(kde_childcareSG_adaptive)
+```
+:::
+
+
+## Kernel Density Estimation
+
+Code chunk shown two different ways to convert KDE output into grid object
+
+::: {.panel-tabset}
+
+### maptools method
+
+::: {style="font-size: 1.50em"}
+```{r}
+#| eval: false
+par(bg = '#E4D5C9')
+
+gridded_kde_childcareSG_ad <- maptools::as.SpatialGridDataFrame.im(
+  kde_childcareSG_adaptive)
+spplot(gridded_kde_childcareSG_ad)
+```
+:::
+
+### spatstat.geom method
+
+::: {style="font-size: 1.50em"}
+```{r}
+gridded_kde_childcareSG_ad <- as(
+  kde_childcareSG_adaptive,
+  "SpatialGridDataFrame")
+spplot(gridded_kde_childcareSG_ad)
+```
+:::
+:::
+
+## Kernel Density Estimation
+### Visualising KDE using tmap
+
+```{r}
+#| echo: false
+#| output: false
+kde_childcareSG_ad_raster <- raster(gridded_kde_childcareSG_ad)
+projection(kde_childcareSG_ad_raster) <- CRS("+init=EPSG:3414")
+kde_childcareSG_ad_raster
+```
+
+The code chunk below is used to plot the output raster by using tmap functions.
+
+::: {style="font-size: 1.50em"}
+```{r}
+tm_shape(kde_childcareSG_ad_raster) + 
+  tm_raster(palette = "viridis") +
+  tm_layout(legend.position = c("right", "bottom"), 
+            frame = FALSE,
+            bg.color = "#E4D5C9")
+```
+:::
+
+## Extracting study area using sf objects
+
+::: {.panel-tabset}
+### The task
+
+Extract and create an ppp object showing child care services and within Punggol Planning Area
+
+### The code
+
+On the other hand, `filter()` of dplyr package should be used to extract the target planning areas as shown in the code chunk below.
+
+::: {style="font-size: 1.50em"}
+```{r}
+pg_owin <- mpsz_sf %>%
+  filter(PLN_AREA_N == "PUNGGOL") %>%
+  as.owin()
+
+childcare_pg = childcare_ppp[pg_owin]
+
+plot(childcare_pg)  
+```
+:::
+:::
+
+## Geospatial Analytics for Social Good: Myanmar Arm Conflict Case Study
+
+-   Background
+
+-   [Myanmar’s Troubled History: Coups, Military Rule, and Ethnic Conflict](https://www.cfr.org/backgrounder/myanmar-history-coup-military-rule-ethnic-conflict-rohingya)
+
+-   [Myanmar conflict](https://en.wikipedia.org/wiki/Myanmar_conflict)
+
+-   [Myanmar civil war (2021–present)](https://en.wikipedia.org/wiki/Myanmar_civil_war_(2021%E2%80%93present))
+
+## The Data
+
+[Armed Conflict Location & Event Data (ACLED)](https://acleddata.com/)
+
+![](img/image2.jpg){width="45"}
+
+-   An independent, impartial, international non-profit organization collecting data on violent conflict and protest in all countries and territories in the world.
+
+GIS Data
+
+-   [Myanmar Information Management Unit, MIMU](http://www.themimu.info/)
+
+## Importing ACLED Data
+
+::: panel-tabset
+### The task
+
+Using the steps you learned in previous lessons, import the ACLED data into R environment as an sf tibble data.frame.
+
+### The code
+
+::: {style="font-size: 1.50em"}
+```{r}
+acled_sf <- read_csv("data/Myanmar/ACLED_Myanmar.csv") %>%
+  st_as_sf(coords = c(
+    "longitude", "latitude"),
+    crs=4326) %>%
+  st_transform(crs = 32647) %>%
+  mutate(event_date = dmy(event_date))
+```
+:::
+:::
+
+## Visualising ACLED Data
+
+::: {.panel-tabset}
+### The task
+
+Using the steps you learned in previous lessons, import the ACLED data into R environment as an sf tibble data.frame.
+
+### The code
+
+::: {style="font-size: 1.50em"}
+```{r}
+tmap_mode("plot")
+acled_sf %>%
+  filter(year == 2023 | 
+           event_type == "Political violence") %>%
+  tm_shape()+
+  tm_dots()
+tmap_mode("plot")
+```
+:::
+:::
