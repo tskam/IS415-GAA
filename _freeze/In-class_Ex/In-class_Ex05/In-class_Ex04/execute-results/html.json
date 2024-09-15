@@ -1,0 +1,17 @@
+{
+  "hash": "58c70a1ddbe7ad46a0a75ac97e6cbb43",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"In-class Exercise 5: Global and Local Measures of Spatial Autocorrelation - sfdep methods\"\ndate: \"13 February 2023\"\ndate-modified: \"last-modified\"\nformat: \n  html:\n    fontsize: 18px\nexecute: \n  echo: true\n  eval: true\n  warning: false\n  freeze: true\neditor: visual  \n---\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(sf, spdep, tmap, tidyverse, knitr, GWmodel)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nhunan <- st_read(dsn = \"data/geospatial\", \n                 layer = \"Hunan\")\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\nReading layer `Hunan' from data source \n  `D:\\tskam\\is415-gaa\\In-class_Ex\\In-class_Ex05\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 88 features and 7 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812\nGeodetic CRS:  WGS 84\n```\n\n\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nhunan2012 <- read_csv(\"data/aspatial/Hunan_2012.csv\")\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nhunan <- left_join(hunan, hunan2012) %>%\n  select(1:4, 7, 15)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nbasemap <- tm_shape(hunan) +\n  tm_polygons() +\n  tm_text(\"NAME_3\", size=0.5)\n\ngdppc <- qtm(hunan, \"GDPPC\")\ntmap_arrange(basemap, gdppc, asp=1, ncol=2)\n```\n\n::: {.cell-output-display}\n![](In-class_Ex04_files/figure-html/unnamed-chunk-5-1.png){width=1152}\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nwm_q <- poly2nb(hunan, \n                queen=TRUE)\nsummary(wm_q)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\nNeighbour list object:\nNumber of regions: 88 \nNumber of nonzero links: 448 \nPercentage nonzero weights: 5.785124 \nAverage number of links: 5.090909 \nLink number distribution:\n\n 1  2  3  4  5  6  7  8  9 11 \n 2  2 12 16 24 14 11  4  2  1 \n2 least connected regions:\n30 65 with 1 link\n1 most connected region:\n85 with 11 links\n```\n\n\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nlongitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[1]])\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nlatitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[2]])\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ncoords <- cbind(longitude, latitude)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nk1 <- knn2nb(knearneigh(coords))\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nk1dists <- unlist(nbdists(k1, coords,\n                          longlat = TRUE))\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nplot(hunan$geometry, border=\"lightgrey\")\nplot(wm_q, coords, pch = 19, cex = 0.6, add = TRUE, col= \"red\")\n```\n\n::: {.cell-output-display}\n![](In-class_Ex04_files/figure-html/unnamed-chunk-12-1.png){width=768}\n:::\n:::\n\n\n## Working with Geographically Weighted Summary Statistics (GWSS)\n\n\n::: {.cell}\n\n```{.r .cell-code}\nhunan_sp <- hunan %>%\n  as_Spatial()\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ngwstat <- gwss(data = hunan_sp,\n               vars = \"GDPPC\",\n               bw = 6,\n               kernel = \"bisquare\",\n               adaptive = TRUE,\n               longlat = T)\n```\n:::\n",
+    "supporting": [
+      "In-class_Ex04_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

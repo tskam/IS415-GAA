@@ -201,13 +201,11 @@ plot(kde_childcareSG_adaptive)
 ```
 :::
 
-
 ## Kernel Density Estimation
 
 Code chunk shown two different ways to convert KDE output into grid object
 
-::: {.panel-tabset}
-
+::: panel-tabset
 ### maptools method
 
 ::: {style="font-size: 1.50em"}
@@ -234,6 +232,7 @@ spplot(gridded_kde_childcareSG_ad)
 :::
 
 ## Kernel Density Estimation
+
 ### Visualising KDE using tmap
 
 ```{r}
@@ -258,7 +257,7 @@ tm_shape(kde_childcareSG_ad_raster) +
 
 ## Extracting study area using sf objects
 
-::: {.panel-tabset}
+::: panel-tabset
 ### The task
 
 Extract and create an ppp object showing child care services and within Punggol Planning Area
@@ -325,7 +324,7 @@ acled_sf <- read_csv("data/Myanmar/ACLED_Myanmar.csv") %>%
 
 ## Visualising ACLED Data
 
-::: {.panel-tabset}
+::: panel-tabset
 ### The task
 
 Using the steps you learned in previous lessons, import the ACLED data into R environment as an sf tibble data.frame.
