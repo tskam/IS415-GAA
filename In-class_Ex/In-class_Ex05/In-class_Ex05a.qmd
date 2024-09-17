@@ -1,0 +1,124 @@
+---
+title: "In-class Exercise 5: Geographically Weighted Statistics - gwModel methods"
+date: "12 September 2024"
+date-modified: "last-modified"
+format: 
+  html:
+    fontsize: 18px
+execute: 
+  echo: true
+  eval: true
+  warning: false
+  freeze: true
+editor: visual  
+---
+
+## Loading the package
+
+In this in-class exercise, sf, spdep, tmap, tidyverse, knitr and GWmodel will be used.
+
+::: {.panel-tabset}
+
+### DIY
+
+Using the step you leanred from previous hands-in, install and load the necessary R packages in R environment.
+
+### The code
+
+```{r}
+pacman::p_load(sf, spdep, tmap, tidyverse, knitr, GWmodel)
+```
+
+:::
+
+## Preparing the Data
+
+For this in-class exercise, Hunan shapefile and Hunan_2012 data file will be used.
+
+::: {.panel-tabset}
+
+### DIY
+
+Using the steps you learned from previous hands-on, import Hunan shapefile and Hunan_2012 data file into R environment. 
+
+
+### Importing Hunan shapefile
+
+```{r}
+hunan <- st_read(dsn = "data/geospatial", 
+                 layer = "Hunan")
+```
+
+### Importing Hunan_2012 table
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+:::
+
+```{r}
+hunan <- left_join(hunan, hunan2012) %>%
+  select(1:4, 7, 15)
+```
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+basemap <- tm_shape(hunan) +
+  tm_polygons() +
+  tm_text("NAME_3", size=0.5)
+
+gdppc <- qtm(hunan, "GDPPC")
+tmap_arrange(basemap, gdppc, asp=1, ncol=2)
+```
+
+```{r}
+wm_q <- poly2nb(hunan, 
+                queen=TRUE)
+summary(wm_q)
+```
+
+```{r}
+longitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[1]])
+```
+
+```{r}
+latitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[2]])
+```
+
+```{r}
+coords <- cbind(longitude, latitude)
+```
+
+```{r}
+k1 <- knn2nb(knearneigh(coords))
+```
+
+```{r}
+k1dists <- unlist(nbdists(k1, coords,
+                          longlat = TRUE))
+```
+
+```{r}
+#| fig-width: 8 
+#| fig-height: 6
+plot(hunan$geometry, border="lightgrey")
+plot(wm_q, coords, pch = 19, cex = 0.6, add = TRUE, col= "red")
+```
+
+## Working with Geographically Weighted Summary Statistics (GWSS)
+
+```{r}
+hunan_sp <- hunan %>%
+  as_Spatial()
+```
+
+```{r}
+gwstat <- gwss(data = hunan_sp,
+               vars = "GDPPC",
+               bw = 6,
+               kernel = "bisquare",
+               adaptive = TRUE,
+               longlat = T)
+```

@@ -1,0 +1,369 @@
+---
+title: "In-class Exercise 5: Geographically Weighted Statistics - gwModel methods"
+author: "Dr. Kam Tin Seong<br/>Assoc. Professor of Information Systems(Practice)"
+institute: "School of Computing and Information Systems,<br/>Singapore Management University"
+date: "`r Sys.Date()`"
+format: 
+  revealjs:
+    pdf: default
+    width: 1600
+    height: 900
+    show-notes: false
+    slide-number: true
+    show-slide-number: all
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+date-format: "DD MMM YYYY"
+editor: visual 
+---
+
+## Loading the package
+
+In this in-class exercise, sf, spdep, tmap, tidyverse, knitr and GWmodel will be used.
+
+::: panel-tabset
+### DIY
+
+Using the step you leanred from previous hands-in, install and load the necessary R packages in R environment.
+
+### The code
+
+::: {style="font-size: 1.50em"}
+```{r}
+pacman::p_load(sf, spdep, tmap, tidyverse, knitr, GWmodel)
+```
+:::
+:::
+
+## Preparing the Data
+
+For this in-class exercise, Hunan shapefile and Hunan_2012 data file will be used.
+
+::: panel-tabset
+### DIY
+
+Using the steps you learned from previous hands-on, complete the following tasks:
+
+-   import Hunan shapefile and parse it into a sf polygon feature object.
+-   import Hunan_2012.csv file parse it into a tibble data.frame.
+-   join Hunan and Hunan_2012 data.frames.
+
+### Importing Hunan shapefile
+
+::: {style="font-size: 1.50em"}
+```{r}
+hunan_sf <- st_read(dsn = "data/geospatial", 
+                 layer = "Hunan")
+```
+:::
+
+### Importing Hunan_2012 table
+
+::: {style="font-size: 1.50em"}
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+:::
+
+### Joining Hunan and Hunan_2012
+
+::: {style="font-size: 1.50em"}
+```{r}
+hunan_sf <- left_join(hunan_sf, hunan2012) %>%
+  select(1:3, 7, 15, 16, 31, 32)
+```
+:::
+:::
+
+## Mapping GDPPC
+
+::: {.panel-tabset}
+
+### DIY
+
+Using the steps you learned from Hands-on Exercise 5, prepare a choropleth map showing the geographic distribution of GDPPC of Hunan Province.
+
+::: {style="font-size: 1.50em"}
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+#| echo: false
+basemap <- tm_shape(hunan_sf) +
+  tm_polygons() +
+  tm_text("NAME_3", size=0.5)
+
+gdppc <- qtm(hunan_sf, "GDPPC")
+tmap_arrange(basemap, gdppc, asp=1, ncol=2)
+```
+:::
+
+### The code
+
+::: {style="font-size: 1.50em"}
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+#| eval: false
+basemap <- tm_shape(hunan_sf) +
+  tm_polygons() +
+  tm_text("NAME_3", size=0.5)
+
+gdppc <- qtm(hunan, "GDPPC")
+tmap_arrange(basemap, gdppc, asp=1, ncol=2)
+```
+:::
+:::
+
+##  Converting to SpatialPolygonDataFrame
+
+::: {.callout-note}
+GWmodel presently is built around the older sp and not sf formats for handling spatial data in R.
+:::
+
+::: {style="font-size: 1.50em"}
+```{r}
+hunan_sp <- hunan_sf %>%
+  as_Spatial()
+```
+:::
+
+## Geographically Weighted Summary Statistics with adaptive bandwidth
+### Determine adaptive bandwidth
+
+::: {.panel-tabset}
+
+### Cross-validation
+::: {style="font-size: 1.20em"}
+```{r}
+bw_CV <- bw.gwr(GDPPC ~ 1, 
+             data = hunan_sp,
+             approach = "CV",
+             adaptive = TRUE, 
+             kernel = "bisquare", 
+             longlat = T)
+bw_CV
+```
+:::
+
+### AIC
+
+::: {style="font-size: 1.20em"}
+```{r}
+bw_AIC <- bw.gwr(GDPPC ~ 1, 
+             data = hunan_sp,
+             approach ="AIC",
+             adaptive = TRUE, 
+             kernel = "bisquare", 
+             longlat = T)
+bw_AIC
+```
+:::
+:::
+
+## Geographically Weighted Summary Statistics with adaptive bandwidth
+### Computing geographically wieghted summary statistics
+
+::: {style="font-size: 1.50em"}
+```{r}
+gwstat <- gwss(data = hunan_sp,
+               vars = "GDPPC",
+               bw = bw_AIC,
+               kernel = "bisquare",
+               adaptive = TRUE,
+               longlat = T)
+```
+:::
+
+## Geographically Weighted Summary Statistics with adaptive bandwidth
+### Preparing the output data
+
+Code chunk below is used to extract **SDF** data table from **gwss** object output from `gwss()`.  It will be converted into data.frame by using `as.data.frame()`.
+
+::: {style="font-size: 1.50em"}
+```{r}
+gwstat_df <- as.data.frame(gwstat$SDF)
+```
+:::
+
+Next, `cbind()` is used to append the newly derived data.frame onto *hunan_sf* sf data.frame.
+
+::: {style="font-size: 1.50em"}
+```{r}
+hunan_gstat <- cbind(hunan_sf, gwstat_df)
+```
+:::
+
+## Geographically Weighted Summary Statistics with adaptive bandwidth
+### Visualising geographically weighted summary statistics
+
+::: {.panel-tabset}
+
+### The Geographically Weighted Mean
+
+::: columns
+::: {.column width="50%"}
+
+```{r}
+#| fig-height: 9
+#| echo: false
+tm_shape(hunan_gstat) +
+  tm_fill("GDPPC_LM",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Distribution of geographically wieghted mean",
+            main.title.position = "center",
+            main.title.size = 2.0,
+            legend.text.size = 1.2,
+            legend.height = 1.50, 
+            legend.width = 1.50,
+            frame = TRUE)
+```
+:::
+:::
+
+### The code
+
+::: {style="font-size: 1.50em"}
+```{r}
+#| eval: false
+tm_shape(hunan_gstat) +
+  tm_fill("GDPPC_LM",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Distribution of geographically wieghted mean",
+            main.title.position = "center",
+            main.title.size = 2.0,
+            legend.text.size = 1.2,
+            legend.height = 1.50, 
+            legend.width = 1.50,
+            frame = TRUE)
+```
+:::
+:::
+
+## Geographically Weighted Summary Statistics with fixed
+### Determine fixed bandwidth 
+
+::: {.panel-tabset}
+
+### Cross-validation
+::: {style="font-size: 1.20em"}
+```{r}
+bw_CV <- bw.gwr(GDPPC ~ 1, 
+             data = hunan_sp,
+             approach = "CV",
+             adaptive = FALSE, 
+             kernel = "bisquare", 
+             longlat = T)
+bw_CV
+```
+:::
+
+### AIC
+
+::: {style="font-size: 1.20em"}
+```{r}
+bw_AIC <- bw.gwr(GDPPC ~ 1, 
+             data = hunan_sp,
+             approach ="AIC",
+             adaptive = FALSE, 
+             kernel = "bisquare", 
+             longlat = T)
+bw_AIC
+```
+:::
+:::
+
+## Geographically Weighted Summary Statistics with fixed
+### Computing adaptive bandwidth
+
+::: {style="font-size: 1.50em"}
+```{r}
+gwstat <- gwss(data = hunan_sp,
+               vars = "GDPPC",
+               bw = bw_AIC,
+               kernel = "bisquare",
+               adaptive = FALSE,
+               longlat = T)
+```
+:::
+
+## Geographically Weighted Summary Statistics with fixed bandwidth
+### Preparing the output data
+
+Code chunk below is used to extract **SDF** data table from **gwss** object output from `gwss()`.  It will be converted into data.frame by using `as.data.frame()`.
+
+
+::: {style="font-size: 1.50em"}
+```{r}
+gwstat_df <- as.data.frame(gwstat$SDF)
+```
+:::
+
+Next, `cbind()` is used to append the newly derived data.frame onto *hunan_sf* sf data.frame.
+
+::: {style="font-size: 1.50em"}
+```{r}
+hunan_gstat <- cbind(hunan_sf, gwstat_df)
+```
+:::
+
+## Geographically Weighted Summary Statistics with fixed
+### Visualising geographically weighted summary statistics
+
+::: {.panel-tabset}
+
+
+
+
+
+### The Geographically Weighted Mean
+
+::: columns
+::: {.column width="50%"}
+
+```{r}
+#| fig-height: 9
+#| echo: false
+tm_shape(hunan_gstat) +
+  tm_fill("GDPPC_LM",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Distribution of geographically wieghted mean",
+            main.title.position = "center",
+            main.title.size = 2.0,
+            legend.text.size = 1.2,
+            legend.height = 1.50, 
+            legend.width = 1.50,
+            frame = TRUE)
+```
+:::
+:::
+
+### The code
+
+::: {style="font-size: 1.50em"}
+```{r}
+#| eval: false
+tm_shape(hunan_gstat) +
+  tm_fill("GDPPC_LM",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Distribution of geographically wieghted mean",
+            main.title.position = "center",
+            main.title.size = 2.0,
+            legend.text.size = 1.2,
+            legend.height = 1.50, 
+            legend.width = 1.50,
+            frame = TRUE)
+```
+:::
+:::
+
