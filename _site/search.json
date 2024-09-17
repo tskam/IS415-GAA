@@ -17,8 +17,8 @@
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#issue-1-installing-maptools",
     "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#issue-1-installing-maptools",
     "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
-    "section": "Issue 1: Installing maptools",
-    "text": "Issue 1: Installing maptools\nmaptools is retired and binary is removed from CRAN. However, we can download from Posit Public Package Manager snapshots by using the code chunk below.\n\n\ninstall.packages(\"maptools\", \n                 repos = \"https://packagemanager.posit.co/cran/2023-10-13\")"
+    "section": "",
+    "text": "maptools is retired and binary is removed from CRAN. However, we can download from Posit Public Package Manager snapshots by using the code chunk below.\n\n\ninstall.packages(\"maptools\", \n                 repos = \"https://packagemanager.posit.co/cran/2023-10-13\")"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#issue-1-installing-maptools-1",
@@ -32,7 +32,7 @@
     "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#issue-2-creating-coastal-outline",
     "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
     "section": "Issue 2: Creating coastal outline",
-    "text": "Issue 2: Creating coastal outline\nIn sf package, there are two functions allow us to combine multiple simple features into one simple features. They are st_combine() and st_union().\nst_combine() returns a single, combined geometry, with no resolved boundaries; returned geometries may well be invalid.\nIf y is missing, st_union(x) returns a single geometry with resolved boundaries, else the geometries for all unioned pairs of x[i] and y[j]."
+    "text": "Issue 2: Creating coastal outline\nIn sf package, there are two functions allow us to combine multiple simple features into one simple features. They are st_combine() and st_union().\nst_combine() returns a single, combined geometry, with no resolved boundaries; returned geometries may well be invalid.\nIf y is missing, st_union(x) returns a single geometry with resolved boundaries, else the geometries for all unioned pairs of x[i] and y[j].\n\n\nWorking with st_union()\n\n\nThe code chunk below, st_union()is used to derive the coastal outline sf tibble data.frame.\n\n\nsg_sf &lt;- mpsz_sf %&gt;%\n  st_union()\n\n\nsg_sf will look similar to the figure below."
   },
   {
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#introducing-spatstat-package",
@@ -46,7 +46,7 @@
     "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#spatstat",
     "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
     "section": "spatstat",
-    "text": "spatstat\nspatstat sub-packages\n\n\nThe spatstat package now contains only documentation and introductory material. It provides beginner’s introductions, vignettes, interactive demonstration scripts, and a few help files summarising the package.\nThe spatstat.data package now contains all the datasets for spatstat.\nThe spatstat.utils package contains basic utility functions for spatstat.\nThe spatstat.univar package contains functions for estimating and manipulating probability distributions of one-dimensional random variables.\nThe spatstat.sparse package contains functions for manipulating sparse arrays and performing linear algebra.\nThe spatstat.geom package contains definitions of spatial objects (such as point patterns, windows and pixel images) and code which performs geometrical operations.\nThe spatstat.random package contains functions for random generation of spatial patterns and random simulation of models.\nThe spatstat.explore package contains the code for exploratory data analysis and nonparametric analysis of spatial data.\nThe spatstat.model package contains the code for model-fitting, model diagnostics, and formal inference.\nThe spatstat.linnet package defines spatial data on a linear network, and performs geometrical operations and statistical analysis on such data."
+    "text": "spatstat\n\nspatstat sub-packages\n\n\nThe spatstat package now contains only documentation and introductory material. It provides beginner’s introductions, vignettes, interactive demonstration scripts, and a few help files summarising the package.\nThe spatstat.data package now contains all the datasets for spatstat.\nThe spatstat.utils package contains basic utility functions for spatstat.\nThe spatstat.univar package contains functions for estimating and manipulating probability distributions of one-dimensional random variables.\nThe spatstat.sparse package contains functions for manipulating sparse arrays and performing linear algebra.\nThe spatstat.geom package contains definitions of spatial objects (such as point patterns, windows and pixel images) and code which performs geometrical operations.\nThe spatstat.random package contains functions for random generation of spatial patterns and random simulation of models.\nThe spatstat.explore package contains the code for exploratory data analysis and nonparametric analysis of spatial data.\nThe spatstat.model package contains the code for model-fitting, model diagnostics, and formal inference.\nThe spatstat.linnet package defines spatial data on a linear network, and performs geometrical operations and statistical analysis on such data."
   },
   {
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#creating-ppp-objects-from-sf-data.frame",
@@ -235,7 +235,7 @@
     "href": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#kernel-density-estimation-1",
     "title": "In-class Exercise 3: Spatial Point Patterns Analysis: spatstat methods",
     "section": "Kernel Density Estimation",
-    "text": "Kernel Density Estimation\nVisualising KDE using tmap\nThe code chunk below is used to plot the output raster by using tmap functions.\n\n\ntm_shape(kde_childcareSG_ad_raster) + \n  tm_raster(palette = \"viridis\") +\n  tm_layout(legend.position = c(\"right\", \"bottom\"), \n            frame = FALSE,\n            bg.color = \"#E4D5C9\")"
+    "text": "Kernel Density Estimation\n\nVisualising KDE using tmap\nThe code chunk below is used to plot the output raster by using tmap functions.\n\n\ntm_shape(kde_childcareSG_ad_raster) + \n  tm_raster(palette = \"viridis\") +\n  tm_layout(legend.position = c(\"right\", \"bottom\"), \n            frame = FALSE,\n            bg.color = \"#E4D5C9\")"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html#kernel-density-estimation-2",
@@ -677,5 +677,33 @@
     "title": "In-class Exercise 5: Geographically Weighted Statistics - gwModel methods",
     "section": "Geographically Weighted Summary Statistics with fixed bandwidth",
     "text": "Geographically Weighted Summary Statistics with fixed bandwidth\nPreparing the output data\nCode chunk below is used to extract SDF data table from gwss object output from gwss(). It will be converted into data.frame by using as.data.frame().\n\n\ngwstat_df &lt;- as.data.frame(gwstat$SDF)\n\n\nNext, cbind() is used to append the newly derived data.frame onto hunan_sf sf data.frame.\n\n\nhunan_gstat &lt;- cbind(hunan_sf, gwstat_df)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/In-class_Ex05a.html",
+    "href": "In-class_Ex/In-class_Ex05/In-class_Ex05a.html",
+    "title": "In-class Exercise 5: Geographically Weighted Statistics - gwModel methods",
+    "section": "",
+    "text": "In this in-class exercise, sf, spdep, tmap, tidyverse, knitr and GWmodel will be used.\n\nDIYThe code\n\n\nUsing the step you leanred from previous hands-in, install and load the necessary R packages in R environment.\n\n\n\npacman::p_load(sf, spdep, tmap, tidyverse, knitr, GWmodel)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/In-class_Ex05a.html#loading-the-package",
+    "href": "In-class_Ex/In-class_Ex05/In-class_Ex05a.html#loading-the-package",
+    "title": "In-class Exercise 5: Geographically Weighted Statistics - gwModel methods",
+    "section": "",
+    "text": "In this in-class exercise, sf, spdep, tmap, tidyverse, knitr and GWmodel will be used.\n\nDIYThe code\n\n\nUsing the step you leanred from previous hands-in, install and load the necessary R packages in R environment.\n\n\n\npacman::p_load(sf, spdep, tmap, tidyverse, knitr, GWmodel)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/In-class_Ex05a.html#preparing-the-data",
+    "href": "In-class_Ex/In-class_Ex05/In-class_Ex05a.html#preparing-the-data",
+    "title": "In-class Exercise 5: Geographically Weighted Statistics - gwModel methods",
+    "section": "Preparing the Data",
+    "text": "Preparing the Data\nFor this in-class exercise, Hunan shapefile and Hunan_2012 data file will be used.\n\nDIYImporting Hunan shapefileImporting Hunan_2012 table\n\n\nUsing the steps you learned from previous hands-on, import Hunan shapefile and Hunan_2012 data file into R environment.\n\n\n\nhunan &lt;- st_read(dsn = \"data/geospatial\", \n                 layer = \"Hunan\")\n\nReading layer `Hunan' from data source \n  `D:\\tskam\\is415-gaa\\In-class_Ex\\In-class_Ex05\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 88 features and 7 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812\nGeodetic CRS:  WGS 84\n\n\n\n\n\nhunan2012 &lt;- read_csv(\"data/aspatial/Hunan_2012.csv\")\n\n\n\n\n\nhunan &lt;- left_join(hunan, hunan2012) %&gt;%\n  select(1:4, 7, 15)\n\n\nbasemap &lt;- tm_shape(hunan) +\n  tm_polygons() +\n  tm_text(\"NAME_3\", size=0.5)\n\ngdppc &lt;- qtm(hunan, \"GDPPC\")\ntmap_arrange(basemap, gdppc, asp=1, ncol=2)\n\n\n\n\n\n\n\n\n\nwm_q &lt;- poly2nb(hunan, \n                queen=TRUE)\nsummary(wm_q)\n\nNeighbour list object:\nNumber of regions: 88 \nNumber of nonzero links: 448 \nPercentage nonzero weights: 5.785124 \nAverage number of links: 5.090909 \nLink number distribution:\n\n 1  2  3  4  5  6  7  8  9 11 \n 2  2 12 16 24 14 11  4  2  1 \n2 least connected regions:\n30 65 with 1 link\n1 most connected region:\n85 with 11 links\n\n\n\nlongitude &lt;- map_dbl(hunan$geometry, ~st_centroid(.x)[[1]])\n\n\nlatitude &lt;- map_dbl(hunan$geometry, ~st_centroid(.x)[[2]])\n\n\ncoords &lt;- cbind(longitude, latitude)\n\n\nk1 &lt;- knn2nb(knearneigh(coords))\n\n\nk1dists &lt;- unlist(nbdists(k1, coords,\n                          longlat = TRUE))\n\n\nplot(hunan$geometry, border=\"lightgrey\")\nplot(wm_q, coords, pch = 19, cex = 0.6, add = TRUE, col= \"red\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/In-class_Ex05a.html#working-with-geographically-weighted-summary-statistics-gwss",
+    "href": "In-class_Ex/In-class_Ex05/In-class_Ex05a.html#working-with-geographically-weighted-summary-statistics-gwss",
+    "title": "In-class Exercise 5: Geographically Weighted Statistics - gwModel methods",
+    "section": "Working with Geographically Weighted Summary Statistics (GWSS)",
+    "text": "Working with Geographically Weighted Summary Statistics (GWSS)\n\nhunan_sp &lt;- hunan %&gt;%\n  as_Spatial()\n\n\ngwstat &lt;- gwss(data = hunan_sp,\n               vars = \"GDPPC\",\n               bw = 6,\n               kernel = \"bisquare\",\n               adaptive = TRUE,\n               longlat = T)"
   }
 ]
