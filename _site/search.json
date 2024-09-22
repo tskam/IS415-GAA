@@ -396,7 +396,7 @@
     "href": "Take-home_Ex/Take-home_Ex2/Take-home_Ex2.html#computing-gi",
     "title": "Take-home Exercise 2: Drug Offenses",
     "section": "Computing Gi*",
-    "text": "Computing Gi*\n\nehsa_drug &lt;- emerging_hotspot_analysis(\n  x = drug_cube,\n  .var = \"drug_use_cases\",\n  k = 1,\n  nsim = 99\n)\n\n\nVisualising the distribution of EHSA class\n\nggplot(data = ehsa_drug,\n       aes(x = classification)) +\n  geom_bar()\n\n\n\n\n\n\n\n\n\n\nMapping the classes\n\nprov_ehsa &lt;- prov_cleaned %&gt;%\n  left_join(ehsa_drug,\n            by = join_by(ADM1_EN == location))\n\n\nehsa_sig &lt;- prov_ehsa %&gt;%\n  filter(p_value &lt; 0.1)\n\ntmap_mode(\"plot\")\n\ntmap mode set to plotting\n\ntm_shape(prov_ehsa) +\n  tm_polygons() +\n  tm_borders(alpha = 0.5) +\ntm_shape(ehsa_sig) +\n  tm_fill(\"classification\") +\n  tm_borders(alpha = 0.4)\n\nWarning: One tm layer group has duplicated layer types, which are omitted. To\ndraw multiple layers of the same type, use multiple layer groups (i.e. specify\ntm_shape prior to each of them).\n\n\nLegend labels were too wide. The labels have been resized to 0.50, 0.52, 0.60. Increase legend.width (argument of tm_layout) to make the legend wider and therefore the labels larger."
+    "text": "Computing Gi*\n\nehsa_drug &lt;- emerging_hotspot_analysis(\n  x = drug_cube,\n  .var = \"drug_use_cases\",\n  k = 1,\n  nsim = 99\n)\n\n\nVisualising the distribution of EHSA class\n\nggplot(data = ehsa_drug,\n       aes(x = classification)) +\n  geom_bar()\n\n\n\n\n\n\n\n\n\n\nMapping the classes\n\nprov_ehsa &lt;- prov_cleaned %&gt;%\n  left_join(ehsa_drug,\n            by = join_by(ADM1_EN == location))\n\n\nehsa_sig &lt;- prov_ehsa %&gt;%\n  filter(p_value &lt; 0.1)\n\ntmap_mode(\"plot\")\n\ntmap mode set to plotting\n\ntm_shape(prov_ehsa) +\n  tm_polygons() +\n  tm_borders(alpha = 0.5) +\ntm_shape(ehsa_sig) +\n  tm_fill(\"classification\") +\n  tm_borders(alpha = 0.4)\n\nWarning: One tm layer group has duplicated layer types, which are omitted. To\ndraw multiple layers of the same type, use multiple layer groups (i.e. specify\ntm_shape prior to each of them).\n\n\nSome legend labels were too wide. These labels have been resized to 0.52, 0.60. Increase legend.width (argument of tm_layout) to make the legend wider and therefore the labels larger."
   },
   {
     "objectID": "In-class_Ex/In-class_Ex05/In-class_Ex05.html",
@@ -705,5 +705,12 @@
     "title": "In-class Exercise 5: Geographically Weighted Statistics - gwModel methods",
     "section": "Working with Geographically Weighted Summary Statistics (GWSS)",
     "text": "Working with Geographically Weighted Summary Statistics (GWSS)\n\nhunan_sp &lt;- hunan %&gt;%\n  as_Spatial()\n\n\ngwstat &lt;- gwss(data = hunan_sp,\n               vars = \"GDPPC\",\n               bw = 6,\n               kernel = \"bisquare\",\n               adaptive = TRUE,\n               longlat = T)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/data/rawdata/Kepulauan_Bangka_Belitung.html",
+    "href": "In-class_Ex/In-class_Ex04/data/rawdata/Kepulauan_Bangka_Belitung.html",
+    "title": "IS415-GAA",
+    "section": "",
+    "text": "&lt;!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’&gt;     \n\n\n       GEOGCRS[“WGS 84”,ENSEMBLE[“World Geodetic System 1984 ensemble”,MEMBER[“World Geodetic System 1984 (Transit)”],MEMBER[“World Geodetic System 1984 (G730)”],MEMBER[“World Geodetic System 1984 (G873)”],MEMBER[“World Geodetic System 1984 (G1150)”],MEMBER[“World Geodetic System 1984 (G1674)”],MEMBER[“World Geodetic System 1984 (G1762)”],MEMBER[“World Geodetic System 1984 (G2139)”],ELLIPSOID[“WGS 84”,6378137,298.257223563,LENGTHUNIT[“metre”,1]],ENSEMBLEACCURACY[2.0]],PRIMEM[“Greenwich”,0,ANGLEUNIT[“degree”,0.0174532925199433]],CS[ellipsoidal,2],AXIS[“geodetic latitude (Lat)”,north,ORDER[1],ANGLEUNIT[“degree”,0.0174532925199433]],AXIS[“geodetic longitude (Lon)”,east,ORDER[2],ANGLEUNIT[“degree”,0.0174532925199433]],USAGE[SCOPE[“Horizontal component of 3D system.”],AREA[“World.”],BBOX[-90,-180,90,180]],ID[“EPSG”,4326]] +proj=longlat +datum=WGS84 +no_defs 3452 4326 EPSG:4326 WGS 84 longlat EPSG:7030 true"
   }
 ]
