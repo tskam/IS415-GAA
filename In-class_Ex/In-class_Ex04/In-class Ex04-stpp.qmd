@@ -51,7 +51,7 @@ Using the steps you learned from previous chapter, write a code chunk to load th
 ### The solution
 
 ```{r}
-pacman::p_load(sf, raster, spatstat, sparr, tmap, tidyverse)
+pacman::p_load(sf, raster, spatstat, sparr, tmap, stopp, tidyverse, stpp)
 ```
 :::
 
@@ -309,3 +309,75 @@ summary(kde_yday)
 ```{r}
 plot(kde_yday)
 ```
+
+## Spatio-temporal Point Patterns Analysis: stopp methods
+
+::: callout-note
+Remember to include stopp package in `p_load()`.
+:::
+
+Step 1: Extracting forest fire coordinates from the fire point events
+
+```{r}
+coords <- st_coordinates(fire_sf)
+```
+
+Step 2: Converting the acq_date into numric data format.  Note that the base number starts from Jan 1, 1970.
+
+```{r}
+fire_sf <- fire_sf %>%
+  mutate(numeric_date <- as.numeric(acq_date))
+```
+
+Step 3: Build a data.frame from the coordinates and date
+
+```{r}
+fire_df <- data.frame(
+  x = coords[, 1],  
+  y = coords[, 2],
+  date = fire_sf$`DayofYear`)
+```
+
+
+```{r}
+fire_df <- data.frame(
+  x = coords[, 1],  
+  y = coords[, 2],
+  date = fire_sf$`numeric_date <- as.numeric(acq_date)`)
+```
+
+Step 4: Creating a stp object
+
+```{r}
+fire_stp <- stp(fire_df)
+```
+
+Step 5: Plotting the s datapatio-temporal
+
+```{r}
+plot(fire_stp, tcum = TRUE)
+```
+
+```{r}
+spatial_bandwidth <- seq(0, 5000, length.out = 100) 
+temporal_bandwidth <- seq(0, 100, length.out = 50)  
+```
+
+```{r}
+kst_result <- Kst(fire_stp, 
+                  srange = spatial_bandwidth, 
+                  trange = temporal_bandwidth)
+```
+
+
+
+## Spatio-temporal Point Patterns Analysis: stpp methods
+
+```{r}
+spatial_data <- as.data.frame(st_coordinates(fire_stp$geom))
+```
+
+```{r}
+fire_stpp <- as.3dpoints(fire_list)
+```
+

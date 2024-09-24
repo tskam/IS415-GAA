@@ -147,6 +147,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex03/In-class_Ex03-SPAA.html">
  <span class="dropdown-text">In-class Exercise 3</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex05/In-class_Ex05.html">
+ <span class="dropdown-text">In-class Exercise 5</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -418,7 +422,7 @@ What can your learn from the code chunk above?
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(prov_drug) <span class="sc">+</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"drug_use_cases"</span>,</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"quantile"</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"jenks"</span>,</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">title =</span> <span class="st">"Drug use cases"</span>,</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"Blues"</span>) <span class="sc">+</span>  </span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>() <span class="sc">+</span>  </span>
@@ -586,7 +590,7 @@ draw multiple layers of the same type, use multiple layer groups (i.e. specify
 tm_shape prior to each of them).</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Legend labels were too wide. The labels have been resized to 0.50, 0.52, 0.60. Increase legend.width (argument of tm_layout) to make the legend wider and therefore the labels larger.</code></pre>
+<pre><code>Some legend labels were too wide. These labels have been resized to 0.52, 0.60. Increase legend.width (argument of tm_layout) to make the legend wider and therefore the labels larger.</code></pre>
 </div>
 <div class="cell-output-display">
 <div>

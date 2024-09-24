@@ -508,7 +508,7 @@
     "href": "In-class_Ex/In-class_Ex04/In-class Ex04-stpp.html#installing-and-loading-the-r-packages",
     "title": "Spatio-Temporal Point Patterns Analysis",
     "section": "Installing and Loading the R packages",
-    "text": "Installing and Loading the R packages\nFor the purpose of this study, six R packages will be used. They are:\n\nsf provides functions for importing processing and wrangling geospatial data,,\nraster for handling raster data in R,\nspatstat for performing Spatial Point Patterns Analysis such as kcross, Lcross, etc.,\nsparr provides functions to estimate fixed and adaptive kernel-smoothed spatial relative risk surfaces via the density-ratio method and perform subsequent inference. Fixed-bandwidth spatiotemporal density and relative risk estimation is also supported\ntmap provides functions to produce cartographic quality thematic maps, and\ntidyverse, a family of R packages that provide functions to perform common data science tasks including and not limited to data import, data transformation, data wrangling and data visualisation.\n\n\nDIYThe solution\n\n\nUsing the steps you learned from previous chapter, write a code chunk to load the packages above onto R environment.\n\n\n\npacman::p_load(sf, raster, spatstat, sparr, tmap, tidyverse)"
+    "text": "Installing and Loading the R packages\nFor the purpose of this study, six R packages will be used. They are:\n\nsf provides functions for importing processing and wrangling geospatial data,,\nraster for handling raster data in R,\nspatstat for performing Spatial Point Patterns Analysis such as kcross, Lcross, etc.,\nsparr provides functions to estimate fixed and adaptive kernel-smoothed spatial relative risk surfaces via the density-ratio method and perform subsequent inference. Fixed-bandwidth spatiotemporal density and relative risk estimation is also supported\ntmap provides functions to produce cartographic quality thematic maps, and\ntidyverse, a family of R packages that provide functions to perform common data science tasks including and not limited to data import, data transformation, data wrangling and data visualisation.\n\n\nDIYThe solution\n\n\nUsing the steps you learned from previous chapter, write a code chunk to load the packages above onto R environment.\n\n\n\npacman::p_load(sf, raster, spatstat, sparr, tmap, stopp, tidyverse)"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex04/In-class Ex04-stpp.html#importing-and-preparing-study-area",
@@ -712,5 +712,82 @@
     "title": "IS415-GAA",
     "section": "",
     "text": "&lt;!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’&gt;     \n\n\n       GEOGCRS[“WGS 84”,ENSEMBLE[“World Geodetic System 1984 ensemble”,MEMBER[“World Geodetic System 1984 (Transit)”],MEMBER[“World Geodetic System 1984 (G730)”],MEMBER[“World Geodetic System 1984 (G873)”],MEMBER[“World Geodetic System 1984 (G1150)”],MEMBER[“World Geodetic System 1984 (G1674)”],MEMBER[“World Geodetic System 1984 (G1762)”],MEMBER[“World Geodetic System 1984 (G2139)”],ELLIPSOID[“WGS 84”,6378137,298.257223563,LENGTHUNIT[“metre”,1]],ENSEMBLEACCURACY[2.0]],PRIMEM[“Greenwich”,0,ANGLEUNIT[“degree”,0.0174532925199433]],CS[ellipsoidal,2],AXIS[“geodetic latitude (Lat)”,north,ORDER[1],ANGLEUNIT[“degree”,0.0174532925199433]],AXIS[“geodetic longitude (Lon)”,east,ORDER[2],ANGLEUNIT[“degree”,0.0174532925199433]],USAGE[SCOPE[“Horizontal component of 3D system.”],AREA[“World.”],BBOX[-90,-180,90,180]],ID[“EPSG”,4326]] +proj=longlat +datum=WGS84 +no_defs 3452 4326 EPSG:4326 WGS 84 longlat EPSG:7030 true"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#content",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#content",
+    "title": "In-class Exercise 6: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
+    "section": "Content",
+    "text": "Content\n\nIntroducing sfdep.\n\nsfdep creates an sf and tidyverse friendly interface to the package as well as introduces new functionality that is not present in spdep.\nsfdep utilizes list columns extensively to make this interface possible.”"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#getting-started",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#getting-started",
+    "title": "In-class Exercise 6: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
+    "section": "Getting started",
+    "text": "Getting started\nInstalling and Loading the R Packages\nFour R packages will be used for this in-class exercise, they are: sf, sfdep, tmap and tidyverse.\n\nDo It Yourself!The code\n\n\nUsing the steps you learned in previous lesson, install and load sf, tmap, sfdep and tidyverse packages into R environment.\n\n\n\n\npacman::p_load(sf, sfdep, tmap, tidyverse)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#the-data",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#the-data",
+    "title": "In-class Exercise 6: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
+    "section": "The Data",
+    "text": "The Data\nFor the purpose of this in-class exercise, the Hunan data sets will be used. There are two data sets in this use case, they are:\n\nHunan, a geospatial data set in ESRI shapefile format, and\nHunan_2012, an attribute data set in csv format.\n\n\nDo It Yourself!The code\n\n\nUsing the steps you learned in previous lesson, import Hunan shapefile into R environment as an sf data frame.\n\n\n\n\nhunan &lt;- st_read(dsn = \"data/geospatial\", \n                 layer = \"Hunan\")\n\nReading layer `Hunan' from data source \n  `D:\\tskam\\is415-gaa\\In-class_Ex\\In-class_Ex06\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 88 features and 7 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812\nGeodetic CRS:  WGS 84"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#importing-attribute-table",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#importing-attribute-table",
+    "title": "In-class Exercise 6: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
+    "section": "Importing Attribute Table",
+    "text": "Importing Attribute Table\n\nDo It Yourself!The code\n\n\nUsing the steps you learned in previous lesson, import Hunan_2012.csv into R environment as an tibble data frame.\n\n\n\n\nhunan2012 &lt;- read_csv(\"data/aspatial/Hunan_2012.csv\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#combining-both-data-frame-by-using-left-join",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#combining-both-data-frame-by-using-left-join",
+    "title": "In-class Exercise 6: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
+    "section": "Combining both data frame by using left join",
+    "text": "Combining both data frame by using left join\n\nDo It Yourself!The code\n\n\nUsing the steps you learned in previous lesson, combine the Hunan sf data frame and Hunan_2012 data frame. Ensure that the output is an sf data frame.\n\n\n\n\nhunan_GDPPC &lt;- left_join(hunan, hunan2012) %&gt;%\n  select(1:4, 7, 15)\n\n\n\n\n\n\n\n\nNote\n\n\nFor the purpose of this exercise, we only retain column 1 to 4, column 7 and column 15. You should examine the output sf data.frame to learn know what are these fields.\n\n\n\n\n\n\n\n\n\nImportant\n\n\nIn order to retain the geospatial properties, the left data frame must the sf data.frame (i.e. hunan)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#plotting-a-choropleth-map",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#plotting-a-choropleth-map",
+    "title": "In-class Exercise 6: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
+    "section": "Plotting a choropleth map",
+    "text": "Plotting a choropleth map\n\nDo It Yourself!The plotThe code\n\n\nUsing the steps you learned in previous lesson, plot a choropleth map showing the distribution of GDPPC of Hunan Province.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ntmap_mode(\"plot\")\ntm_shape(hunan_GDPPC) +\n  tm_fill(\"GDPPC\", \n          style = \"quantile\", \n          palette = \"Blues\",\n          title = \"GDPPC\") +\n  tm_layout(main.title = \"Distribution of GDP per capita by county, Hunan Province\",\n            main.title.position = \"center\",\n            main.title.size = 1.2,\n            legend.height = 0.45, \n            legend.width = 0.35,\n            frame = TRUE) +\n  tm_borders(alpha = 0.5) +\n  tm_compass(type=\"8star\", size = 2) +\n  tm_scale_bar() +\n  tm_grid(alpha =0.2)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#global-measures-of-spatial-association",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#global-measures-of-spatial-association",
+    "title": "In-class Exercise 6: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
+    "section": "Global Measures of Spatial Association",
+    "text": "Global Measures of Spatial Association\nStep 1: Deriving Queen’s contiguity weights: sfdep methods\n\n\n\n\nwm_q &lt;- hunan_GDPPC %&gt;%\n  mutate(nb = st_contiguity(geometry),\n         wt = st_weights(nb,\n                         style = \"W\"),\n         .before = 1) \n\n\n\n\nNotice that st_weights() provides tree arguments, they are:\n\nnb: A neighbor list object as created by st_neighbors().\nstyle: Default “W” for row standardized weights. This value can also be “B”, “C”, “U”, “minmax”, and “S”. B is the basic binary coding, W is row standardised (sums over all links to n), C is globally standardised (sums over all links to n), U is equal to C divided by the number of neighbours (sums over all links to unity), while S is the variance-stabilizing coding scheme proposed by Tiefelsdorf et al. 1999, p. 167-168 (sums over all links to n).\nallow_zero: If TRUE, assigns zero as lagged value to zone without neighbors."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#computing-local-morans-i",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#computing-local-morans-i",
+    "title": "In-class Exercise 6: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
+    "section": "Computing local Moran’s I",
+    "text": "Computing local Moran’s I\nIn this section, you will learn how to compute Local Moran’s I of GDPPC at county level by using local_moran() of sfdep package.\n\nThe codeThe output\n\n\n\n\nlisa &lt;- wm_q %&gt;% \n  mutate(local_moran = local_moran(\n    GDPPC, nb, wt, nsim = 99),\n         .before = 1) %&gt;%\n  unnest(local_moran)\n\n\n\n\n\nThe output of local_moran() is a sf data.frame containing the columns ii, eii, var_ii, z_ii, p_ii, p_ii_sim, and p_folded_sim.\n\nii: local moran statistic\neii: expectation of local moran statistic; for localmoran_permthe permutation sample means\nvar_ii: variance of local moran statistic; for localmoran_permthe permutation sample standard deviations\nz_ii: standard deviate of local moran statistic; for localmoran_perm based on permutation sample means and standard deviations p_ii: p-value of local moran statistic using pnorm(); for localmoran_perm using standard deviatse based on permutation sample means and standard deviations p_ii_sim: For localmoran_perm(), rank() and punif() of observed statistic rank for [0, 1] p-values using alternative= -p_folded_sim: the simulation folded [0, 0.5] range ranked p-value (based on https://github.com/pysal/esda/blob/4a63e0b5df1e754b17b5f1205b cadcbecc5e061/esda/crand.py#L211-L213)\nskewness: For localmoran_perm, the output of e1071::skewness() for the permutation samples underlying the standard deviates\nkurtosis: For localmoran_perm, the output of e1071::kurtosis() for the permutation samples underlying the standard deviates."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#hot-spot-and-cold-spot-area-analysis-hcsa",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#hot-spot-and-cold-spot-area-analysis-hcsa",
+    "title": "In-class Exercise 6: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
+    "section": "Hot Spot and Cold Spot Area Analysis (HCSA)",
+    "text": "Hot Spot and Cold Spot Area Analysis (HCSA)\n\n\nHCSA uses spatial weights to identify locations of statistically significant hot spots and cold spots in an spatially weighted attribute that are in proximity to one another based on a calculated distance. The analysis groups features when similar high (hot) or low (cold) values are found in a cluster. The polygon features usually represent administration boundaries or a custom grid structure."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class Ex04-stpp.html#spatio-temporal-point-patterns-analysis-stopp-methods",
+    "href": "In-class_Ex/In-class_Ex04/In-class Ex04-stpp.html#spatio-temporal-point-patterns-analysis-stopp-methods",
+    "title": "Spatio-Temporal Point Patterns Analysis",
+    "section": "Spatio-temporal Point Patterns Analysis: stopp methods",
+    "text": "Spatio-temporal Point Patterns Analysis: stopp methods\n\n\n\n\n\n\nNote\n\n\n\nRemember to include stopp package in p_load().\n\n\nStep 1: Extracting forest fire coordinates from the fire point events\n\ncoords &lt;- st_coordinates(fire_sf)\n\nStep 2: Converting the acq_date into numric data format. Note that the base number starts from Jan 1, 1970.\n\nfire_sf &lt;- fire_sf %&gt;%\n  mutate(numeric_date &lt;- as.numeric(acq_date))\n\nStep 3: Build a data.frame from the coordinates and date\n\nfire_df &lt;- data.frame(\n  x = coords[, 1],  \n  y = coords[, 2],\n  date = fire_sf$`DayofYear`)\n\n\nfire_df &lt;- data.frame(\n  x = coords[, 1],  \n  y = coords[, 2],\n  date = fire_sf$`numeric_date &lt;- as.numeric(acq_date)`)\n\nStep 4: Creating a stp object\n\nfire_stp &lt;- stp(fire_df)\n\nStep 5: Plotting the s datapatio-temporal\n\nplot(fire_stp, tcum = TRUE)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#lisa-map",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06-sfdep.html#lisa-map",
+    "title": "In-class Exercise 6: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
+    "section": "LISA map",
+    "text": "LISA map\n\n\nLISA map is a categorical map showing outliers and clusters. There are two types of outliers namely: High-Low and Low-High outliers. Likewise, there are two type of clusters namely: High-High and Low-Low cluaters. In fact, LISA map is an interpreted map by combining local Moran’s I of geographical areas and their respective p-values."
   }
 ]
